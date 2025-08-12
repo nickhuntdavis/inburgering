@@ -1,0 +1,141 @@
+:root{
+  --bg: #0f1220;
+  --panel: #171a2b;
+  --text: #e6e9f5;
+  --muted: #a9b0c7;
+  --accent: #6ee7ff;
+  --accent-2: #a78bfa;
+  --good: #34d399;
+  --hard: #fbbf24;
+  --again: #f87171;
+  --danger: #ef4444;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text);
+  background: radial-gradient(1000px 600px at 10% -10%, #1a1f3a, transparent),
+              radial-gradient(800px 500px at 100% 0%, #172035, transparent),
+              var(--bg);
+}
+
+.app{
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.topbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:12px 16px;
+}
+.topbar h1{flex:1 1 240px;font-size:20px;margin:0}
+.controls-row{display:flex;flex-wrap:wrap;gap:8px 12px}
+label{display:flex;gap:8px;align-items:center;color:var(--muted)}
+select,button{
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid #28304e;
+  border-radius:8px;
+  padding:8px 10px;
+}
+button{cursor:pointer}
+button.secondary{border-color:#364068}
+button.danger{border-color: #4f1d1d; background:#251316; color:#ffb4b4}
+
+main{margin-top:16px}
+.stage{
+  display:grid;
+  place-items:center;
+  margin-top:12px;
+  position: relative;
+}
+
+.card{
+  width: min(680px, 94vw);
+  height: 320px;
+  perspective: 1200px;
+  border-radius: 16px;
+  outline:none;
+}
+.card .inner{
+  position:relative;
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition: transform 420ms cubic-bezier(.2,.8,.2,1);
+}
+.card.flipped .inner{transform: rotateY(180deg)}
+.card .side{
+  position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background: linear-gradient(180deg, #1b2037, #121525);
+  border:1px solid #2a3154;
+  border-radius:16px;
+  padding:24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.35);
+}
+.front .term{font-size:28px; text-align:center}
+.front .meta{margin-top:16px; display:flex; gap:8px; color:var(--muted)}
+.chip{background:#202747; border:1px solid #2a3154; border-radius:999px; padding:4px 10px}
+.chip.subtle{opacity:.8}
+
+.back{transform: rotateY(180deg)}
+.definition{font-size:28px; line-height:1.3; color:inherit; text-align:center; max-width: 90%}
+.context-hint{margin-top:10px; font-size:14px; color:#a9b0c7; text-align:center; max-width: 90%}
+
+.actions{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:16px 0}
+.btn{border-radius:10px; padding:10px 14px; border:1px solid #2b355a}
+.btn.good{background:#13211a; border-color:#204f3b; color:#b5ffd9}
+.btn.hard{background:#2d220f; border-color:#5b431a; color:#ffe6aa}
+.btn.again{background:#2b1414; border-color:#5b1c1c; color:#ffd3d3}
+.btn.tertiary{background:#171b30; color:#c6c9da}
+.icon-btn{background:transparent; border:none; color:#9aa3c4; cursor:pointer}
+.icon-btn.small{font-size:16px; padding:2px 6px}
+.icon-btn:hover{color:#cfd6f0}
+
+.progress{margin:10px 0 0; display:grid; gap:8px; justify-items:center}
+.stats#categoryStats{opacity:0.95}
+.progress-bar{width:min(680px,94vw); height:10px; background:#161a2e; border:1px solid #2a3154; border-radius:999px; overflow:hidden}
+.progress-bar .fill{height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width 200ms ease}
+.stats{color:var(--muted)}
+
+.avatar{margin-top:12px; display:grid; justify-items:center; gap:6px}
+.avatar-img{width:200px; height:auto; image-rendering:auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,.35));}
+.avatar-caption{font-size:12px; color:var(--muted)}
+
+.help{margin-top:8px;}
+summary{cursor:pointer}
+
+footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
+
+.confetti{position: absolute; inset: 0; pointer-events:none}
+
+@media (max-width:520px){
+  .card{height: 300px}
+  .front .term{font-size:24px}
+}
+
+.toast{
+  position: fixed;
+  left: 50%;
+  top: 20px;
+  transform: translateX(-50%);
+  background: rgba(23, 26, 43, 0.95);
+  border:1px solid #3a4470;
+  color: #e6e9f5;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.4);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.toast.show{opacity:1; transform: translateX(-50%) translateY(4px)}
+
+

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KNM Dutch Flashcards</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <h1>KNM Dutch Flashcards</h1>
+
+          <div class="controls-row">
+          <label>
+            Category
+            <select id="categorySelect"></select>
+          </label>
+
+          <label>
+            Show
+            <select id="knownFilterSelect">
+              <option value="unknown">Unknown only</option>
+              <option value="all">All cards</option>
+              <option value="known">Known only</option>
+              <option value="hard">Hard only</option>
+            </select>
+          </label>
+
+            <button id="shuffleBtn" class="secondary" title="Shuffle deck (S)">Shuffle</button>
+            <button id="resetKnownBtn" class="danger" title="Reset known (R)">Reset Known</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="stage">
+          <div id="card" class="card" tabindex="0" role="button" aria-label="Flashcard; press Space to flip">
+            <div class="inner" id="cardInner">
+              <div class="side front" id="cardFront">
+                <div class="term" id="term">—</div>
+                <div class="meta">
+                  <span id="categoryChip" class="chip"></span>
+                  <span id="subcategoryChip" class="chip subtle"></span>
+                </div>
+              </div>
+              <div class="side back" id="cardBack">
+                <div class="definition" id="definition">—</div>
+                <div class="context-hint" id="contextHint"></div>
+              </div>
+            </div>
+          </div>
+          <canvas id="confettiCanvas" class="confetti" aria-hidden="true"></canvas>
+        </section>
+
+        <section class="actions">
+          <button id="hardBtn" class="btn hard" title="Hard (2)">Hard</button>
+          <button id="goodBtn" class="btn good" title="Know it (3 or K)">Know it</button>
+          <button id="unmarkBtn" class="btn tertiary" title="Make Unknown (U)">Make Unknown</button>
+          <button id="nextBtn" class="btn secondary" title="Next (N)">Next</button>
+          <button id="flipBtn" class="btn tertiary" title="Flip (Space/F)">Flip</button>
+          <button id="speakBtn" class="btn tertiary" title="Speak term (P)">🔊 Speak</button>
+        </section>
+
+        <section class="progress">
+          <div class="progress-bar">
+            <div id="progressFill" class="fill"></div>
+          </div>
+          <div class="stats" id="categoryStats">
+            <span id="countRemainingCat">0</span> left •
+            Known: <span id="countKnownCat">0</span> •
+            Total: <span id="countTotalCat">0</span>
+          </div>
+          <div class="stats">
+            <span id="countRemaining">0</span> left •
+            Known: <span id="countKnown">0</span> •
+            Total: <span id="countTotal">0</span>
+          </div>
+        </section>
+
+        <section class="avatar">
+          <img id="avatarImg" class="avatar-img" alt="Progress character" />
+          <div id="avatarCaption" class="avatar-caption"></div>
+        </section>
+
+        <div id="milestoneToast" class="toast" role="status" aria-live="polite"></div>
+
+        <section class="help">
+          <details>
+            <summary>Keyboard shortcuts</summary>
+            <ul>
+              <li>Space / F: flip</li>
+              <li>1: Again • 2: Hard • 3 or K: Know it • N: Next</li>
+              <li>S: Shuffle • R: Reset known • P: Speak term</li>
+            </ul>
+          </details>
+        </section>
+      </main>
+
+      <footer>
+        Made for KNM exam practice. Progress is saved in your browser.
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+  </html>
+
+

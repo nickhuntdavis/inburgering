@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Optional: redirect legacy local proxy path to the Netlify function in production
+[[redirects]]
+  from = "/cards"
+  to = "/.netlify/functions/cards"
+  status = 200
+
