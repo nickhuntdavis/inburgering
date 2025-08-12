@@ -9,9 +9,7 @@
   <body>
     <div class="app">
       <header class="topbar">
-        <h1>KNM Dutch Flashcards</h1>
-
-          <div class="controls-row">
+          <div class="controls-row top-controls">
           <label>
             Category
             <div class="multi-select" id="categoryMulti">
@@ -30,8 +28,8 @@
             </select>
           </label>
 
-            <button id="shuffleBtn" class="secondary" title="Shuffle deck (S)">Shuffle</button>
-            <button id="resetKnownBtn" class="danger" title="Reset known (R)">Reset Known</button>
+            <button id="shuffleBtn" class="secondary" title="Shuffle (S)">Shuffle</button>
+            <button id="resetKnownBtn" class="danger" title="Reset known">Reset Known</button>
         </div>
       </header>
 
@@ -56,13 +54,20 @@
         </section>
 
         <section class="actions">
-          <button id="hardBtn" class="btn hard" title="Hard (2)">Hard</button>
-          <button id="prevBtn" class="btn secondary" title="Back (←)">Back</button>
-          <button id="goodBtn" class="btn good" title="Know it (3 or K)">Know it</button>
+          <div class="action-row">
+            <div class="left">
+              <button id="hardBtn" class="btn hard" title="Hard (2)">Hard</button>
+            </div>
+            <div class="center">
+              <button id="prevBtn" class="btn secondary" title="Back (←)">Back</button>
+              <button id="goodBtn" class="btn good" title="Know it (3 or K)">Know it</button>
+              <button id="nextBtn" class="btn secondary" title="Next (N)">Next</button>
+            </div>
+            <div class="right">
+              <button id="speakBtn" class="btn tertiary" title="Listen (P)">🔊 Listen</button>
+            </div>
+          </div>
           <button id="unmarkBtn" class="btn tertiary" title="Make Unknown (U)">Make Unknown</button>
-          <button id="nextBtn" class="btn secondary" title="Next (N)">Next</button>
-          <button id="flipBtn" class="btn tertiary" title="Flip (Space/F)">Flip</button>
-          <button id="speakBtn" class="btn tertiary" title="Speak term (P)">🔊 Speak</button>
         </section>
 
         <section class="progress">
@@ -92,16 +97,19 @@
           <details>
             <summary>Keyboard shortcuts</summary>
             <ul>
-              <li>Space / F: flip</li>
-              <li>1: Again • 2: Hard • 3 or K: Know it • N: Next</li>
-              <li>S: Shuffle • R: Reset known • P: Speak term</li>
+              <li>Flip: Space / ↑</li>
+              <li>Next: → • Back: ←</li>
+              <li>Hard: H</li>
+              <li>Know it: ↓ / K</li>
+              <li>Shuffle: S</li>
+              <li>Listen: L</li>
             </ul>
           </details>
         </section>
       </main>
 
       <footer>
-        Made for KNM exam practice. Progress is saved in your browser.
+        Uses cookies to save your progress.
       </footer>
     </div>
 

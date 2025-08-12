@@ -164,6 +164,10 @@
   // Build working deck based on filters
   function getFilteredCards(){
     let cards = ALL_CARDS;
+    const basicCategoryNames = new Set(['Basic vocabulary','Basic Vocabulary','basic vocabulary']);
+    if(!state.categorySet || state.categorySet.size === 0){
+      cards = cards.filter(c=> !basicCategoryNames.has(String(c.category)));
+    }
     if(state.categorySet && state.categorySet.size > 0){
       cards = cards.filter(c=> state.categorySet.has(c.category));
     }
@@ -975,7 +979,7 @@
   resetKnownBtn.addEventListener('click', resetKnown);
 
   cardEl.addEventListener('click', flip);
-  flipBtn.addEventListener('click', flip);
+  // flip button removed from UI; keep keyboard shortcut
   speakBtn.addEventListener('click', ()=>{ const c = currentCard(); if(c) speak(c.term); });
 
   // removed Again button
@@ -989,20 +993,16 @@
 
   document.addEventListener('keydown', (e)=>{
     if(e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-    if(e.code === 'Space'){ e.preventDefault(); flip(); return; }
+    if(e.code === 'Space' || e.key === 'ArrowUp'){ e.preventDefault(); flip(); return; }
     const key = e.key.toLowerCase();
-    if(key === '1'){ again(); }
-    else if(key === '2'){ hard(); }
-    else if(key === '3' || key === 'k'){ good(); }
-    else if(key === 'n'){ next(); }
+    if(key === 'h'){ hard(); }
+    else if(key === 'k' || e.key === 'ArrowDown'){ good(); }
     else if(e.key === 'ArrowRight'){ next(); }
     else if(e.key === 'ArrowLeft'){ prev(); }
-    else if(key === 'f'){ flip(); }
     else if(key === 's'){ shuffle(); }
-    else if(key === 'r'){ resetKnown(); }
     else if(key === 'u'){ const c = currentCard(); if(c && !c.bonus){ markUnknown(c); refreshDeck(); showCard(currentCard()); }}
     else if(key === 'x'){ const c = currentCard(); if(c && !c.bonus){ markSkipped(c); refreshDeck(); showCard(currentCard()); }}
-    else if(key === 'p'){ const c = currentCard(); if(c) speak(c.term); }
+    else if(key === 'l'){ const c = currentCard(); if(c) speak(c.term); }
   });
 
   // Kickoff
