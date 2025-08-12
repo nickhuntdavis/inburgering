@@ -51,6 +51,7 @@
   const avatarImg = document.getElementById('avatarImg');
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
+  const modeToggle = document.getElementById('modeToggle');
 
   const confettiCanvas = document.getElementById('confettiCanvas');
   const ctx = confettiCanvas.getContext('2d');
@@ -922,6 +923,12 @@
   }
 
   async function init(){
+    // restore theme
+    const savedTheme = localStorage.getItem('knm_theme_v1');
+    if(savedTheme === 'light') document.body.classList.add('theme-light');
+    if(modeToggle){
+      modeToggle.textContent = document.body.classList.contains('theme-light') ? '☀️' : '🌙';
+    }
     populateCategorySelect();
     knownFilterSelect.value = state.filter;
     await syncSetsFromIdb();
@@ -940,6 +947,14 @@
   }
 
   // Event handlers
+  if(modeToggle){
+    modeToggle.addEventListener('click', ()=>{
+      document.body.classList.toggle('theme-light');
+      const isLight = document.body.classList.contains('theme-light');
+      localStorage.setItem('knm_theme_v1', isLight ? 'light' : 'dark');
+      modeToggle.textContent = isLight ? '☀️' : '🌙';
+    });
+  }
   if(categoryDropdownToggle){
     categoryDropdownToggle.addEventListener('click', ()=>{
       const open = categoryMulti.classList.toggle('open');
