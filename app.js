@@ -158,15 +158,11 @@
 
   function updateCategoryToggleText(){
     const cats = uniqueCategories();
-    const selectedCount = state.categorySet && state.categorySet.size>0 ? state.categorySet.size : cats.length;
-    if(selectedCount === cats.length){
-      categoryDropdownToggle.textContent = 'All categories';
-      categoryDropdownToggle.title = 'All categories';
+    if(state.categorySet && state.categorySet.size>0){
+      const count = state.categorySet.size;
+      categoryDropdownToggle.textContent = `${count} selected`;
     } else {
-      categoryDropdownToggle.textContent = `Categories (${selectedCount})`;
-      // Keep the detailed list in the tooltip only
-      const names = Array.from(state.categorySet).join(', ');
-      categoryDropdownToggle.title = names || 'Categories';
+      categoryDropdownToggle.textContent = 'All categories';
     }
   }
 
