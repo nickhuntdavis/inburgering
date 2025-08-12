@@ -36,7 +36,7 @@ body{
   background: radial-gradient(1000px 600px at 10% -10%, #1a1f3a, transparent),
               radial-gradient(800px 500px at 100% 0%, #172035, transparent),
               var(--bg);
-  padding-top:80px;
+  padding-top:40px;
 }
 
 .app{
@@ -75,7 +75,7 @@ button{cursor:pointer}
 button.secondary{border-color:#364068}
 button.danger{border-color: #4f1d1d; background:#251316; color:#ffb4b4}
 
-main{margin-top:16px}
+main{margin-top:0px}
 .stage{
   display:grid;
   place-items:center;
