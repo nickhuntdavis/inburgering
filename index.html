@@ -14,7 +14,10 @@
           <div class="controls-row">
           <label>
             Category
-            <select id="categorySelect" multiple size="6"></select>
+            <div class="multi-select" id="categoryMulti">
+              <button id="categoryDropdownToggle" class="secondary" type="button" aria-haspopup="listbox" aria-expanded="false">All categories</button>
+              <div id="categoryDropdown" class="dropdown-panel" role="listbox" aria-multiselectable="true"></div>
+            </div>
           </label>
 
           <label>
@@ -54,6 +57,7 @@
 
         <section class="actions">
           <button id="hardBtn" class="btn hard" title="Hard (2)">Hard</button>
+          <button id="prevBtn" class="btn secondary" title="Back (←)">Back</button>
           <button id="goodBtn" class="btn good" title="Know it (3 or K)">Know it</button>
           <button id="unmarkBtn" class="btn tertiary" title="Make Unknown (U)">Make Unknown</button>
           <button id="nextBtn" class="btn secondary" title="Next (N)">Next</button>

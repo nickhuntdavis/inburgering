@@ -36,6 +36,15 @@ body{
 }
 .topbar h1{flex:1 1 240px;font-size:20px;margin:0}
 .controls-row{display:flex;flex-wrap:wrap;gap:8px 12px}
+.multi-select{position:relative}
+.multi-select .dropdown-panel{
+  display:none;
+  position:absolute; z-index:10; margin-top:6px; min-width:220px;
+  background:var(--panel); border:1px solid #28304e; border-radius:8px; padding:8px; max-height:260px; overflow:auto;
+}
+.multi-select.open .dropdown-panel{display:block}
+.multi-select .option-row{display:flex; align-items:center; gap:8px; padding:4px 2px}
+.multi-select .option-row label{color:var(--text)}
 label{display:flex;gap:8px;align-items:center;color:var(--muted)}
 select,button{
   background:var(--panel);

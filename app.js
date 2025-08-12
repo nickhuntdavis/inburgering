@@ -15,7 +15,9 @@
   let ALL_CARDS = [];
   
   // Elements
-  const categorySelect = document.getElementById('categorySelect');
+  const categoryMulti = document.getElementById('categoryMulti');
+  const categoryDropdown = document.getElementById('categoryDropdown');
+  const categoryDropdownToggle = document.getElementById('categoryDropdownToggle');
   const knownFilterSelect = document.getElementById('knownFilterSelect');
   const shuffleBtn = document.getElementById('shuffleBtn');
   const resetKnownBtn = document.getElementById('resetKnownBtn');
@@ -133,15 +135,30 @@
 
   function populateCategorySelect(){
     const cats = uniqueCategories();
-    categorySelect.innerHTML = '';
+    categoryDropdown.innerHTML = '';
     const selected = state.categorySet || new Set();
     for(const c of cats){
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = c;
-      if(selected.has(c)) opt.selected = true;
-      categorySelect.appendChild(opt);
+      const row = document.createElement('div');
+      row.className = 'option-row';
+      const id = 'cat_'+c.replace(/[^a-z0-9]+/gi,'_');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = id;
+      cb.value = c;
+      cb.checked = selected.size===0 ? true : selected.has(c);
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.textContent = c;
+      row.appendChild(cb); row.appendChild(label);
+      categoryDropdown.appendChild(row);
     }
+    updateCategoryToggleText();
+  }
+
+  function updateCategoryToggleText(){
+    const cats = uniqueCategories();
+    const selected = state.categorySet && state.categorySet.size>0 ? Array.from(state.categorySet) : cats;
+    categoryDropdownToggle.textContent = selected.length===cats.length ? 'All categories' : selected.join(', ');
   }
 
   // Build working deck based on filters
@@ -696,6 +713,8 @@
     const showUnmark = state.filter === 'known' || state.filter === 'all';
     const unmarkBtn = document.getElementById('unmarkBtn');
     if(unmarkBtn) unmarkBtn.style.display = showUnmark ? '' : 'none';
+    // Show Reset Known only when viewing Known
+    if(resetKnownBtn) resetKnownBtn.style.display = (state.filter === 'known') ? '' : 'none';
   }
 
   function next(){
@@ -917,12 +936,32 @@
   }
 
   // Event handlers
-  categorySelect.addEventListener('change', ()=>{
-    const selected = Array.from(categorySelect.selectedOptions).map(o=>o.value);
-    state.categorySet = new Set(selected);
-    localStorage.setItem(STORAGE_KEYS.lastCategory, JSON.stringify(selected));
-    refreshDeck();
-    computeProgress();
+  if(categoryDropdownToggle){
+    categoryDropdownToggle.addEventListener('click', ()=>{
+      const open = categoryMulti.classList.toggle('open');
+      categoryDropdownToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  if(categoryDropdown){
+    categoryDropdown.addEventListener('change', ()=>{
+      const checks = Array.from(categoryDropdown.querySelectorAll('input[type="checkbox"]'));
+      const selected = checks.filter(c=>c.checked).map(c=>c.value);
+      // If everything is checked, treat as All (empty set) for simplicity
+      const allCats = uniqueCategories();
+      state.categorySet = (selected.length===allCats.length) ? new Set() : new Set(selected);
+      localStorage.setItem(STORAGE_KEYS.lastCategory, JSON.stringify(Array.from(state.categorySet)));
+      updateCategoryToggleText();
+      refreshDeck();
+      computeProgress();
+    });
+  }
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e)=>{
+    if(!categoryMulti.contains(e.target)){
+      categoryMulti.classList.remove('open');
+      categoryDropdownToggle.setAttribute('aria-expanded','false');
+    }
   });
 
   knownFilterSelect.addEventListener('change', ()=>{
@@ -945,6 +984,8 @@
   unmarkBtn.addEventListener('click', ()=>{ const c = currentCard(); if(c && !c.bonus){ markUnknown(c); refreshDeck(); showCard(currentCard()); }});
   // removed skip icon button
   nextBtn.addEventListener('click', next);
+  const prevBtn = document.getElementById('prevBtn');
+  if(prevBtn) prevBtn.addEventListener('click', prev);
 
   document.addEventListener('keydown', (e)=>{
     if(e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
