@@ -33,10 +33,19 @@ body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
   color:var(--text);
-  background: radial-gradient(1000px 600px at 10% -10%, #1a1f3a, transparent),
-              radial-gradient(800px 500px at 100% 0%, #172035, transparent),
-              var(--bg);
+  background: var(--bg);
 }
+
+/* Animated gradient background */
+.bg-anim{position:fixed; inset:-20% -20% -20% -20%; z-index:-1; filter: blur(60px); opacity:0.6;}
+.bg-anim .blob{position:absolute; width:50vw; height:50vw; border-radius:50%; mix-blend-mode:screen;}
+.bg-anim .b1{background:var(--accent); animation: drift1 var(--anim-speed, 14s) infinite alternate ease-in-out; left:-10%; top:-10%;}
+.bg-anim .b2{background:var(--accent-2); animation: drift2 var(--anim-speed, 16s) infinite alternate ease-in-out; right:-10%; top:-5%;}
+.bg-anim .b3{background:#7dd3fc; animation: drift3 var(--anim-speed, 18s) infinite alternate ease-in-out; left:20%; bottom:-10%;}
+
+@keyframes drift1{to{transform: translate(20%, 15%) scale(1.1);}}
+@keyframes drift2{to{transform: translate(-15%, 10%) scale(1.1);}}
+@keyframes drift3{to{transform: translate(10%, -10%) scale(1.1);}}
 
 .app{
   max-width: 960px;
