@@ -95,13 +95,28 @@
   window.addEventListener('resize', resizeCanvas);
   setTimeout(resizeCanvas, 0);
 
+  // Restore saved categories (backward compatible with single string)
+  const savedCatRaw = localStorage.getItem(STORAGE_KEYS.lastCategory);
+  let savedCategorySet = new Set();
+  try{
+    if(savedCatRaw){
+      const trimmed = String(savedCatRaw).trim();
+      if(trimmed.startsWith('[')){
+        JSON.parse(trimmed).forEach(c=> savedCategorySet.add(c));
+      } else if(trimmed && trimmed !== 'All'){
+        savedCategorySet.add(trimmed);
+      }
+    }
+  }catch{}
+
   const state = {
     order: [], // array of card ids in current order
     idx: 0,
     knownSet: new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.known) || '[]')),
     hardSet: new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.hard) || '[]')),
     skipSet: new Set(JSON.parse(localStorage.getItem('knm_skip_cards_v1') || '[]')),
-    category: localStorage.getItem(STORAGE_KEYS.lastCategory) || 'All',
+    categorySet: savedCategorySet, // empty = All categories
+    category: 'All', // legacy field, unused but kept for safety
     filter: localStorage.getItem(STORAGE_KEYS.lastFilter) || 'unknown',
     // bonus scheduling
     stepsSinceBonus: 0,
@@ -113,27 +128,28 @@
   // Build categories
   function uniqueCategories(){
     const cats = new Set(ALL_CARDS.map(c=>c.category));
-    return ['All', ...Array.from(cats)];
+    return Array.from(cats);
   }
 
   function populateCategorySelect(){
     const cats = uniqueCategories();
     categorySelect.innerHTML = '';
-    const desired = cats.includes(state.category) ? state.category : 'All';
+    const selected = state.categorySet || new Set();
     for(const c of cats){
       const opt = document.createElement('option');
       opt.value = c;
       opt.textContent = c;
-      if(c === desired) opt.selected = true;
+      if(selected.has(c)) opt.selected = true;
       categorySelect.appendChild(opt);
     }
-    state.category = desired;
   }
 
   // Build working deck based on filters
   function getFilteredCards(){
     let cards = ALL_CARDS;
-    if(state.category !== 'All') cards = cards.filter(c=>c.category === state.category);
+    if(state.categorySet && state.categorySet.size > 0){
+      cards = cards.filter(c=> state.categorySet.has(c.category));
+    }
     // Globally remove skipped
     cards = cards.filter(c=>!state.skipSet.has(c.id));
     if(state.filter === 'unknown') cards = cards.filter(c=>!state.knownSet.has(c.id));
@@ -179,7 +195,9 @@
 
     // Per-category stats (for current selection)
     let scope = ALL_CARDS;
-    if(state.category !== 'All') scope = ALL_CARDS.filter(c=>c.category === state.category);
+    if(state.categorySet && state.categorySet.size > 0){
+      scope = ALL_CARDS.filter(c=> state.categorySet.has(c.category));
+    }
     const catTotal = scope.length;
     const catKnown = scope.filter(c=>state.knownSet.has(c.id)).length;
     const catRemaining = catTotal - catKnown;
@@ -189,12 +207,12 @@
       countRemainingCat.textContent = String(catRemaining);
     }
     if(categoryStatsEl){
-      categoryStatsEl.style.display = (state.category === 'All') ? 'none' : '';
+      categoryStatsEl.style.display = (state.categorySet && state.categorySet.size > 0) ? '' : 'none';
     }
 
     // Progress bar reflects selected category when filtered; otherwise overall
     const catPct = catTotal === 0 ? 0 : (catKnown / catTotal);
-    const barPct = (state.category === 'All') ? overallPct : catPct;
+    const barPct = (state.categorySet && state.categorySet.size > 0) ? catPct : overallPct;
     progressFill.style.width = (barPct * 100).toFixed(1) + '%';
   }
 
@@ -900,8 +918,9 @@
 
   // Event handlers
   categorySelect.addEventListener('change', ()=>{
-    state.category = categorySelect.value;
-    localStorage.setItem(STORAGE_KEYS.lastCategory, state.category);
+    const selected = Array.from(categorySelect.selectedOptions).map(o=>o.value);
+    state.categorySet = new Set(selected);
+    localStorage.setItem(STORAGE_KEYS.lastCategory, JSON.stringify(selected));
     refreshDeck();
     computeProgress();
   });
