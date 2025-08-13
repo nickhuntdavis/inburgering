@@ -52,6 +52,11 @@
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
   const modeToggle = document.getElementById('modeToggle');
+  const onboardBtn = document.getElementById('onboardBtn');
+  const onboardModal = document.getElementById('onboardModal');
+  const onboardClose = document.getElementById('onboardClose');
+  const onboardAccept = document.getElementById('onboardAccept');
+  const onboardNoSave = document.getElementById('onboardNoSave');
   const flagBtn = document.getElementById('flagBtn');
   const suggestModal = document.getElementById('suggestModal');
   const sugSlug = document.getElementById('sugSlug');
@@ -972,14 +977,21 @@
   }
 
   function persistKnown(){
+    // Respect no-save choice
+    const mode = localStorage.getItem('knm_onboard_seen_v1');
+    if(mode === 'nosave') return;
     localStorage.setItem(STORAGE_KEYS.known, JSON.stringify(Array.from(state.knownSet)));
     idbSet('known', Array.from(state.knownSet));
   }
   function persistHard(){
+    const mode = localStorage.getItem('knm_onboard_seen_v1');
+    if(mode === 'nosave') return;
     localStorage.setItem(STORAGE_KEYS.hard, JSON.stringify(Array.from(state.hardSet)));
     idbSet('hard', Array.from(state.hardSet));
   }
   function persistSkip(){
+    const mode = localStorage.getItem('knm_onboard_seen_v1');
+    if(mode === 'nosave') return;
     localStorage.setItem('knm_skip_cards_v1', JSON.stringify(Array.from(state.skipSet)));
     idbSet('skip', Array.from(state.skipSet));
   }
@@ -1003,10 +1015,21 @@
     // Now refresh deck with loaded cards
     refreshDeck();
     
+    // Show onboarding for first-time visitors
+    try{
+      const seen = localStorage.getItem('knm_onboard_seen_v1');
+      if(!seen){
+        openOnboarding();
+      }
+    }catch{}
+
     // Initial avatar update
     const totalKnownOverall = ALL_CARDS.filter(c=>state.knownSet.has(c.id)).length;
     updateAvatar(ALL_CARDS.length === 0 ? 0 : totalKnownOverall / ALL_CARDS.length);
   }
+
+  function openOnboarding(){ if(onboardModal) onboardModal.classList.remove('hidden'); }
+  function closeOnboarding(){ if(onboardModal) onboardModal.classList.add('hidden'); }
 
   // Event handlers
   if(modeToggle){
@@ -1015,6 +1038,21 @@
       const isLight = document.body.classList.contains('theme-light');
       localStorage.setItem('knm_theme_v1', isLight ? 'light' : 'dark');
       modeToggle.textContent = isLight ? '☀️' : '🌙';
+    });
+  }
+  if(onboardBtn){ onboardBtn.addEventListener('click', openOnboarding); }
+  if(onboardClose){ onboardClose.addEventListener('click', closeOnboarding); }
+  if(onboardNoSave){
+    onboardNoSave.addEventListener('click', ()=>{
+      // Do not persist known/hard/skip into IDB/localStorage anymore for this session
+      try{ localStorage.setItem('knm_onboard_seen_v1','nosave'); }catch{}
+      closeOnboarding();
+    });
+  }
+  if(onboardAccept){
+    onboardAccept.addEventListener('click', ()=>{
+      try{ localStorage.setItem('knm_onboard_seen_v1','accept'); }catch{}
+      closeOnboarding();
     });
   }
   if(flagBtn){ flagBtn.addEventListener('click', openSuggestModal); }

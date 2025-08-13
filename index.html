@@ -30,6 +30,7 @@
 
             <button id="shuffleBtn" class="secondary" title="Shuffle (S)">Shuffle</button>
             <button id="resetKnownBtn" class="danger" title="Reset known">Reset Known</button>
+            <button id="onboardBtn" class="icon-btn small" title="Help & onboarding" aria-label="Help & onboarding">?</button>
         </div>
       </header>
 
@@ -161,6 +162,40 @@
         </ul>
       </div>
     </details>
+
+    <!-- Onboarding Modal -->
+    <div id="onboardModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="obTitle">Welcome to KNM Dutch Flashcards!</h2>
+          <button id="onboardClose" class="icon-btn small" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <strong>Purpose</strong>
+            <div>Practise Dutch vocabulary for the KNM exam with quick, easy flashcards. Flip, review, and track your progress as you learn.</div>
+          </div>
+          <div class="form-row">
+            <strong>How it works</strong>
+            <ul>
+              <li>Flip a card: Space or ↑</li>
+              <li>Mark as Known: ↓ or click Know it</li>
+              <li>Mark as Hard: H or click Hard</li>
+              <li>Next / Back: → and ←</li>
+            </ul>
+          </div>
+          <div class="form-row">
+            <strong>Cookies & Progress</strong>
+            <div>This app uses cookies to remember your progress — which cards you know, which are hard, and where you left off. Without cookies, you can still use the app, but progress will reset when you close it.</div>
+          </div>
+          <div class="hint">You can reopen this guide anytime from the “?” icon in the top bar.</div>
+        </div>
+        <div class="modal-footer">
+          <button id="onboardNoSave" class="btn secondary">Continue Without Saving</button>
+          <button id="onboardAccept" class="btn good">Accept & Save Progress</button>
+        </div>
+      </div>
+    </div>
 
     <script src="app.js"></script>
   </body>
