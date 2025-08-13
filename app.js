@@ -1107,7 +1107,7 @@
     updateActionVisibility();
   });
 
-  shuffleBtn.addEventListener('click', shuffle);
+  if(shuffleBtn){ shuffleBtn.addEventListener('click', shuffle); }
   const shuffleBtn2 = document.getElementById('shuffleBtn2');
   if(shuffleBtn2){ shuffleBtn2.addEventListener('click', shuffle); }
   resetKnownBtn.addEventListener('click', resetKnown);

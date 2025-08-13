@@ -54,6 +54,7 @@ body{
 .topbar h1{display:none}
 .controls-row{display:flex;flex-wrap:wrap;gap:8px 12px}
 .top-controls{justify-content:space-between; align-items:center; width:min(680px,94vw); margin:0 auto}
+.top-controls .top-right{display:flex; gap:12px; align-items:center}
 .multi-select{position:relative}
 .multi-select .dropdown-panel{
   display:none;

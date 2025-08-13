@@ -10,27 +10,21 @@
     <div class="app">
       <header class="topbar">
           <div class="controls-row top-controls">
-          <label>
-            Category
             <div class="multi-select" id="categoryMulti">
               <button id="categoryDropdownToggle" class="secondary" type="button" aria-haspopup="listbox" aria-expanded="false">All categories</button>
               <div id="categoryDropdown" class="dropdown-panel" role="listbox" aria-multiselectable="true"></div>
             </div>
-          </label>
 
-          <label>
-            Show
-            <select id="knownFilterSelect">
-              <option value="unknown">Unknown only</option>
-              <option value="all">All cards</option>
-              <option value="known">Known only</option>
-              <option value="hard">Hard only</option>
-            </select>
-          </label>
-
-            <button id="shuffleBtn" class="secondary" title="Shuffle (S)">Shuffle</button>
-            <button id="resetKnownBtn" class="danger" title="Reset known">Reset Known</button>
-        </div>
+            <div class="top-right">
+              <select id="knownFilterSelect" aria-label="Show">
+                <option value="unknown">Unknown cards</option>
+                <option value="known">Known cards</option>
+                <option value="hard">Hard cards</option>
+                <option value="all">All cards</option>
+              </select>
+              <button id="resetKnownBtn" class="danger" title="Reset known">Reset Known</button>
+            </div>
+          </div>
       </header>
 
       <main>
