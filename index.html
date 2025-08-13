@@ -96,19 +96,7 @@
 
         <div id="milestoneToast" class="toast" role="status" aria-live="polite"></div>
 
-        <section class="help">
-          <details>
-            <summary>Keyboard shortcuts</summary>
-            <ul>
-              <li>Flip: Space / ↑</li>
-              <li>Next: → • Back: ←</li>
-              <li>Hard: H</li>
-              <li>Know it: ↓ / K</li>
-              <li>Shuffle: S</li>
-              <li>Listen: L</li>
-            </ul>
-          </details>
-        </section>
+        
       </main>
 
       <footer>
@@ -123,25 +111,20 @@
             <button id="suggestClose" class="icon-btn small" aria-label="Close">✕</button>
           </div>
           <div class="modal-body">
-            <div class="form-row">
-              <label>Slug
-                <input id="sugSlug" type="text" readonly />
-              </label>
-            </div>
-            <div class="form-row three">
-              <label>Front
+            <input id="sugSlug" type="hidden" />
+            <div class="form-row form-vert">
+              <label>Front of card
                 <textarea id="sugFront" rows="2"></textarea>
               </label>
-              <label>Back
+            </div>
+            <div class="form-row form-vert">
+              <label>Definition
                 <textarea id="sugBack" rows="2"></textarea>
               </label>
+            </div>
+            <div class="form-row form-vert">
               <label>Description
                 <textarea id="sugDesc" rows="3"></textarea>
-              </label>
-            </div>
-            <div class="form-row">
-              <label>Name
-                <input id="sugName" type="text" placeholder="If you'd like to grab some credit, let me know who you are (optional)" />
               </label>
             </div>
             <div class="form-row">
@@ -149,7 +132,12 @@
                 <div id="sugNotes" class="rtarea" contenteditable="true" aria-multiline="true"></div>
               </label>
             </div>
-            <div class="hint">Please edit at least one field or write something in “Anything else?”</div>
+            <div id="sugError" class="error hidden">Please edit at least one field or write something in “Anything else?”</div>
+            <div class="form-row">
+              <label>Name
+                <input id="sugName" type="text" placeholder="If you'd like to grab some credit, let me know who you are (optional)" />
+              </label>
+            </div>
           </div>
           <div class="modal-footer">
             <button id="suggestCancel" class="btn tertiary">Cancel</button>
@@ -158,6 +146,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Keyboard shortcuts floating toggle (bottom-left) -->
+    <details id="kbDetails" class="help-fab">
+      <summary>Keyboard shortcuts</summary>
+      <div class="help-card">
+        <ul>
+          <li>Flip: Space / ↑</li>
+          <li>Next: → • Back: ←</li>
+          <li>Hard: H</li>
+          <li>Know it: ↓ / K</li>
+          <li>Shuffle: S</li>
+          <li>Listen: L</li>
+        </ul>
+      </div>
+    </details>
 
     <script src="app.js"></script>
   </body>

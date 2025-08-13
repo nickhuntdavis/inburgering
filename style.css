@@ -194,12 +194,22 @@ footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
 .modal-card{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:12px; width:min(720px,94vw); box-shadow:0 20px 40px rgba(0,0,0,.45)}
 .modal-header{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border)}
 .modal-body{padding:12px 16px; display:grid; gap:12px}
+.form-vert textarea{width:100%}
 .modal-footer{display:flex; justify-content:flex-end; gap:12px; padding:12px 16px; border-top:1px solid var(--border)}
 .form-row{display:grid; gap:6px}
-.form-row.three{grid-template-columns:1fr 1fr 1fr; gap:12px}
 .form-row label{display:grid; gap:6px; color:var(--muted)}
 .form-row input,.form-row textarea{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px}
 .rtarea{min-height:90px; border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--panel); color:var(--text);}
 .hint{color:var(--muted); font-size:12px}
+.error{color:#ffb4b4; font-size:12px}
+.hidden{display:none}
+
+/* Floating keyboard shortcuts bottom-left */
+.help-fab{position:fixed; left:12px; bottom:12px; z-index:10000}
+.help-fab > summary{list-style:none; cursor:pointer; background:var(--panel); color:var(--muted); border:1px solid var(--border); border-radius:10px; padding:6px 10px}
+.help-fab > summary::-webkit-details-marker{display:none}
+.help-fab[open] > .help-card{display:block}
+.help-card{display:none; position:absolute; left:0; bottom:36px; background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; box-shadow:0 10px 20px rgba(0,0,0,.35)}
+.help-card ul{margin:0; padding-left:16px}
 
 

@@ -316,6 +316,8 @@
     const edited = (sugFront.value !== orig.front) || (sugBack.value !== orig.back) || (sugDesc.value !== orig.description);
     const hasNotes = (sugNotes && sugNotes.innerHTML.trim().length > 0);
     suggestSubmit.disabled = !(edited || hasNotes);
+    const err = document.getElementById('sugError');
+    if(!suggestSubmit.disabled){ err.classList.add('hidden'); }
   }
 
   async function submitSuggestion(){
@@ -1023,6 +1025,15 @@
   if(sugBack){ sugBack.addEventListener('input', validateSuggestion); }
   if(sugDesc){ sugDesc.addEventListener('input', validateSuggestion); }
   if(sugNotes){ sugNotes.addEventListener('input', validateSuggestion); }
+  if(suggestSubmit){
+    suggestSubmit.addEventListener('click', (e)=>{
+      if(suggestSubmit.disabled){
+        const err = document.getElementById('sugError');
+        if(err) err.classList.remove('hidden');
+        e.preventDefault();
+      }
+    }, { capture:true });
+  }
   if(categoryDropdownToggle){
     categoryDropdownToggle.addEventListener('click', ()=>{
       const open = categoryMulti.classList.toggle('open');
