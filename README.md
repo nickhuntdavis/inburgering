@@ -1,8 +1,10 @@
-# KNM Dutch Flashcards
+# Dutch & Such
 
 Practice app for KNM (Kennis van de Nederlandse Maatschappij) with a modern, simple flashcard UI and a structured content source.
 
 Live site: https://genuine-syrniki-f86aeb.netlify.app/
+
+Tagline: Flashcards for culture, society, and daily Dutch
 
 ## Quick start
 
