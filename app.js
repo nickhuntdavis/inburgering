@@ -51,6 +51,7 @@
   const avatarImg = document.getElementById('avatarImg');
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
+  const loadingOverlay = document.getElementById('loading');
   const modeToggle = document.getElementById('modeToggle');
   const onboardBtn = document.getElementById('onboardBtn');
   const onboardModal = document.getElementById('onboardModal');
@@ -1008,12 +1009,14 @@
     await syncSetsFromIdb();
     
     // Load descriptions first, then refresh deck
+    try{ if(loadingOverlay) loadingOverlay.classList.remove('hidden'); }catch{}
     await loadDescriptions();
     // After data loads, categories may change (coming from Baserow). Repopulate now.
     populateCategorySelect();
     
     // Now refresh deck with loaded cards
     refreshDeck();
+    try{ if(loadingOverlay) loadingOverlay.classList.add('hidden'); }catch{}
     
     // Show onboarding for first-time visitors
     try{
