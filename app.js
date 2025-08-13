@@ -319,7 +319,7 @@
   function validateSuggestion(){
     const orig = openSuggestModal._orig || {front:'',back:'',description:''};
     const edited = (sugFront.value !== orig.front) || (sugBack.value !== orig.back) || (sugDesc.value !== orig.description);
-    const hasNotes = (sugNotes && sugNotes.innerHTML.trim().length > 0);
+    const hasNotes = (sugNotes && sugNotes.value && sugNotes.value.trim().length > 0);
     suggestSubmit.disabled = !(edited || hasNotes);
     const err = document.getElementById('sugError');
     if(!suggestSubmit.disabled){ err.classList.add('hidden'); }
@@ -332,7 +332,7 @@
       back: sugBack.value,
       description: sugDesc.value,
       name: sugName.value,
-      anything_else: (sugNotes && sugNotes.innerHTML) || ''
+      anything_else: (sugNotes && sugNotes.value) || ''
     };
     try{
       const res = await fetch('/.netlify/functions/suggest', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});

@@ -199,7 +199,7 @@ footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
 .form-row{display:grid; gap:6px}
 .form-row label{display:grid; gap:6px; color:var(--muted)}
 .form-row input,.form-row textarea{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px}
-.rtarea{min-height:90px; border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--panel); color:var(--text);}
+.rtarea{display:none}
 .hint{color:var(--muted); font-size:12px}
 .error{color:#ffb4b4; font-size:12px}
 .hidden{display:none}
