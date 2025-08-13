@@ -134,9 +134,16 @@ main{margin-top:0px}
 .btn.hard{background:#2d220f; border-color:#5b431a; color:#ffe6aa}
 .btn.again{background:#2b1414; border-color:#5b1c1c; color:#ffd3d3}
 .btn.tertiary{background:#171b30; color:#c6c9da}
+.ico{display:inline-block; width:16px; height:16px; vertical-align:-2px}
+.ico-left{mask:url('assets/icons/ArrowLeft.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/ArrowLeft.svg') no-repeat center/contain; background:#c6c9da; margin-right:6px}
+.ico-right{mask:url('assets/icons/ArrowRight.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/ArrowRight.svg') no-repeat center/contain; background:#c6c9da; margin-left:6px}
+.theme-light .ico-left,.theme-light .ico-right{background:#515976}
 .icon-btn{background:transparent; border:none; color:#9aa3c4; cursor:pointer}
 .icon-btn.small{font-size:16px; padding:2px 6px}
 .icon-btn:hover{color:#cfd6f0}
+.icon-shuffle{width:34px; height:34px; padding:0; display:inline-block}
+.icon-shuffle{mask:url('assets/icons/Shuffle.svg') no-repeat center/18px; -webkit-mask:url('assets/icons/Shuffle.svg') no-repeat center/18px; background:#9aa3c4; border:1px solid var(--border); border-radius:10px}
+.theme-light .icon-shuffle{background:#515976}
 .flag-icon{display:inline-block; width:18px; height:18px; mask:url('assets/icons/Flag.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/Flag.svg') no-repeat center/contain; background:#c6c9da}
 .theme-light .flag-icon{background:#515976}
 
@@ -213,6 +220,9 @@ footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
 .help-card{display:none; position:absolute; left:0; bottom:36px; background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px 12px; box-shadow:0 10px 20px rgba(0,0,0,.35)}
 .help-card ul{margin:0; padding-left:16px}
 .help-fab-btn{background:var(--panel); color:var(--muted); border:1px solid var(--border); border-radius:10px; padding:6px 10px}
+.icon-help{width:34px; height:34px; padding:0; display:inline-block}
+.icon-help{mask:url('assets/icons/QuestionMark.svg') no-repeat center/18px; -webkit-mask:url('assets/icons/QuestionMark.svg') no-repeat center/18px; background:var(--muted)}
+.theme-light .icon-help{background:#515976}
 
 /* Onboarding tweaks */
 #onboardBtn{margin-left:8px}

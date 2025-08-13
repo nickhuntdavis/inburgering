@@ -56,12 +56,13 @@
         <section class="actions">
           <div class="action-row">
             <div class="left">
+              <button id="shuffleBtn2" class="icon-btn small icon-shuffle" title="Shuffle deck" aria-label="Shuffle deck"></button>
               <button id="hardBtn" class="btn hard" title="Hard (2)">Hard</button>
             </div>
             <div class="center">
-              <button id="prevBtn" class="btn secondary" title="Back (←)">Back</button>
+              <button id="prevBtn" class="btn secondary" title="Back (←)"><span class="ico ico-left" aria-hidden="true"></span> Back</button>
               <button id="goodBtn" class="btn good" title="Know it (3 or K)">Know it</button>
-              <button id="nextBtn" class="btn secondary" title="Next (N)">Next</button>
+              <button id="nextBtn" class="btn secondary" title="Next (N)">Next <span class="ico ico-right" aria-hidden="true"></span></button>
             </div>
             <div class="right">
               <button id="speakBtn" class="btn tertiary" title="Listen (P)">🔊 Listen</button>
@@ -162,7 +163,7 @@
           </ul>
         </div>
       </details>
-      <button id="onboardBtn" class="help-fab-btn" title="Help & onboarding" aria-label="Help & onboarding">?</button>
+      <button id="onboardBtn" class="help-fab-btn icon-help" title="Help & onboarding" aria-label="Help & onboarding"></button>
     </div>
 
     <!-- Onboarding Modal -->
