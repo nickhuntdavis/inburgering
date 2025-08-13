@@ -30,7 +30,6 @@
 
             <button id="shuffleBtn" class="secondary" title="Shuffle (S)">Shuffle</button>
             <button id="resetKnownBtn" class="danger" title="Reset known">Reset Known</button>
-            <button id="onboardBtn" class="icon-btn small" title="Help & onboarding" aria-label="Help & onboarding">?</button>
         </div>
       </header>
 
@@ -148,20 +147,23 @@
       </div>
     </div>
 
-    <!-- Keyboard shortcuts floating toggle (bottom-left) -->
-    <details id="kbDetails" class="help-fab">
-      <summary>Keyboard shortcuts</summary>
-      <div class="help-card">
-        <ul>
-          <li>Flip: Space / ↑</li>
-          <li>Next: → • Back: ←</li>
-          <li>Hard: H</li>
-          <li>Know it: ↓ / K</li>
-          <li>Shuffle: S</li>
-          <li>Listen: L</li>
-        </ul>
-      </div>
-    </details>
+    <!-- Keyboard shortcuts + Onboarding (bottom-left) -->
+    <div class="help-fab-row">
+      <details id="kbDetails" class="help-fab">
+        <summary>Keyboard shortcuts</summary>
+        <div class="help-card">
+          <ul>
+            <li>Flip: Space / ↑</li>
+            <li>Next: → • Back: ←</li>
+            <li>Hard: H</li>
+            <li>Know it: ↓ / K</li>
+            <li>Shuffle: S</li>
+            <li>Listen: L</li>
+          </ul>
+        </div>
+      </details>
+      <button id="onboardBtn" class="help-fab-btn" title="Help & onboarding" aria-label="Help & onboarding">?</button>
+    </div>
 
     <!-- Onboarding Modal -->
     <div id="onboardModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="obTitle">
