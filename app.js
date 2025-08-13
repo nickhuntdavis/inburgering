@@ -52,6 +52,17 @@
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
   const modeToggle = document.getElementById('modeToggle');
+  const flagBtn = document.getElementById('flagBtn');
+  const suggestModal = document.getElementById('suggestModal');
+  const sugSlug = document.getElementById('sugSlug');
+  const sugFront = document.getElementById('sugFront');
+  const sugBack = document.getElementById('sugBack');
+  const sugDesc = document.getElementById('sugDesc');
+  const sugName = document.getElementById('sugName');
+  const sugNotes = document.getElementById('sugNotes');
+  const suggestSubmit = document.getElementById('suggestSubmit');
+  const suggestCancel = document.getElementById('suggestCancel');
+  const suggestClose = document.getElementById('suggestClose');
 
   const confettiCanvas = document.getElementById('confettiCanvas');
   const ctx = confettiCanvas.getContext('2d');
@@ -280,6 +291,51 @@
       showToast(messages[Math.floor(Math.random()*messages.length)]);
     }
     updateAvatar.lastIdx = idx;
+  }
+
+  // Suggestion helpers
+  function openSuggestModal(){
+    const c = currentCard(); if(!c) return;
+    // Prefill
+    sugSlug.value = c.id || '';
+    sugFront.value = c.term || '';
+    sugBack.value = c.definition || '';
+    sugDesc.value = c.description || '';
+    sugName.value = '';
+    if(sugNotes) sugNotes.innerHTML = '';
+    // Track original values for change detection
+    openSuggestModal._orig = { front: sugFront.value, back: sugBack.value, description: sugDesc.value };
+    validateSuggestion();
+    suggestModal.classList.remove('hidden');
+  }
+
+  function closeSuggestModal(){ suggestModal.classList.add('hidden'); }
+
+  function validateSuggestion(){
+    const orig = openSuggestModal._orig || {front:'',back:'',description:''};
+    const edited = (sugFront.value !== orig.front) || (sugBack.value !== orig.back) || (sugDesc.value !== orig.description);
+    const hasNotes = (sugNotes && sugNotes.innerHTML.trim().length > 0);
+    suggestSubmit.disabled = !(edited || hasNotes);
+  }
+
+  async function submitSuggestion(){
+    const payload = {
+      slug: sugSlug.value,
+      front: sugFront.value,
+      back: sugBack.value,
+      description: sugDesc.value,
+      name: sugName.value,
+      anything_else: (sugNotes && sugNotes.innerHTML) || ''
+    };
+    try{
+      const res = await fetch('/.netlify/functions/suggest', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+      if(!res.ok) throw new Error(await res.text());
+      showToast('Thanks! Your suggestion was sent.');
+      closeSuggestModal();
+    }catch(e){
+      console.error('Suggest error', e);
+      showToast('Sorry, could not send that. Try again later.');
+    }
   }
 
   function currentCard(){
@@ -959,6 +1015,14 @@
       modeToggle.textContent = isLight ? '☀️' : '🌙';
     });
   }
+  if(flagBtn){ flagBtn.addEventListener('click', openSuggestModal); }
+  if(suggestCancel){ suggestCancel.addEventListener('click', closeSuggestModal); }
+  if(suggestClose){ suggestClose.addEventListener('click', closeSuggestModal); }
+  if(suggestSubmit){ suggestSubmit.addEventListener('click', submitSuggestion); }
+  if(sugFront){ sugFront.addEventListener('input', validateSuggestion); }
+  if(sugBack){ sugBack.addEventListener('input', validateSuggestion); }
+  if(sugDesc){ sugDesc.addEventListener('input', validateSuggestion); }
+  if(sugNotes){ sugNotes.addEventListener('input', validateSuggestion); }
   if(categoryDropdownToggle){
     categoryDropdownToggle.addEventListener('click', ()=>{
       const open = categoryMulti.classList.toggle('open');

@@ -137,6 +137,8 @@ main{margin-top:0px}
 .icon-btn{background:transparent; border:none; color:#9aa3c4; cursor:pointer}
 .icon-btn.small{font-size:16px; padding:2px 6px}
 .icon-btn:hover{color:#cfd6f0}
+.flag-icon{display:inline-block; width:18px; height:18px; mask:url('assets/icons/Flag.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/Flag.svg') no-repeat center/contain; background:#c6c9da}
+.theme-light .flag-icon{background:#515976}
 
 .progress{margin:24px 0 0; display:grid; gap:12px; justify-items:center}
 .stats#categoryStats{opacity:0.95}
@@ -185,5 +187,19 @@ footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
   border:1px solid var(--border); border-radius: 999px; padding: 6px 10px; opacity:.6;
 }
 .mode-toggle:hover{opacity:1}
+
+/* Suggestion modal */
+.modal{position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:10001;}
+.modal.hidden{display:none}
+.modal-card{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:12px; width:min(720px,94vw); box-shadow:0 20px 40px rgba(0,0,0,.45)}
+.modal-header{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border)}
+.modal-body{padding:12px 16px; display:grid; gap:12px}
+.modal-footer{display:flex; justify-content:flex-end; gap:12px; padding:12px 16px; border-top:1px solid var(--border)}
+.form-row{display:grid; gap:6px}
+.form-row.three{grid-template-columns:1fr 1fr 1fr; gap:12px}
+.form-row label{display:grid; gap:6px; color:var(--muted)}
+.form-row input,.form-row textarea{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px}
+.rtarea{min-height:90px; border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--panel); color:var(--text);}
+.hint{color:var(--muted); font-size:12px}
 
 

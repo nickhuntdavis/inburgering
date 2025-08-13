@@ -65,6 +65,9 @@
             </div>
             <div class="right">
               <button id="speakBtn" class="btn tertiary" title="Listen (P)">🔊 Listen</button>
+              <button id="flagBtn" class="icon-btn small" title="Notice a mistake or opportunity for improvement? Please click here to let me know!" aria-label="Flag an issue">
+                <span class="flag-icon" aria-hidden="true"></span>
+              </button>
             </div>
           </div>
           <button id="unmarkBtn" class="btn tertiary" title="Make Unknown (U)">Make Unknown</button>
@@ -112,6 +115,48 @@
         Uses cookies to save your progress.
       </footer>
       <button id="modeToggle" class="mode-toggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      <!-- Suggestion Modal -->
+      <div id="suggestModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="suggestTitle">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h2 id="suggestTitle">Suggest a correction</h2>
+            <button id="suggestClose" class="icon-btn small" aria-label="Close">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <label>Slug
+                <input id="sugSlug" type="text" readonly />
+              </label>
+            </div>
+            <div class="form-row three">
+              <label>Front
+                <textarea id="sugFront" rows="2"></textarea>
+              </label>
+              <label>Back
+                <textarea id="sugBack" rows="2"></textarea>
+              </label>
+              <label>Description
+                <textarea id="sugDesc" rows="3"></textarea>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>Name
+                <input id="sugName" type="text" placeholder="If you'd like to grab some credit, let me know who you are (optional)" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>Anything else?
+                <div id="sugNotes" class="rtarea" contenteditable="true" aria-multiline="true"></div>
+              </label>
+            </div>
+            <div class="hint">Please edit at least one field or write something in “Anything else?”</div>
+          </div>
+          <div class="modal-footer">
+            <button id="suggestCancel" class="btn tertiary">Cancel</button>
+            <button id="suggestSubmit" class="btn good" disabled>Submit</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="app.js"></script>
