@@ -128,8 +128,8 @@ main{margin-top:0px}
   gap:12px;
 }
 .action-row .center{display:flex; gap:12px; align-items:center; justify-content:center}
-.action-row .left{justify-self:start}
-.action-row .right{justify-self:end}
+.action-row .left{justify-self:start; display:flex; align-items:center; gap:12px}
+.action-row .right{justify-self:end; display:flex; align-items:center; gap:12px}
 .btn{border-radius:10px; padding:10px 14px; border:1px solid #2b355a}
 .btn.good{background:#13211a; border-color:#204f3b; color:#b5ffd9}
 .btn.hard{background:#2d220f; border-color:#5b431a; color:#ffe6aa}
@@ -139,12 +139,13 @@ main{margin-top:0px}
 .ico-left{mask:url('assets/icons/ArrowLeft.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/ArrowLeft.svg') no-repeat center/contain; background:#c6c9da; margin-right:6px}
 .ico-right{mask:url('assets/icons/ArrowRight.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/ArrowRight.svg') no-repeat center/contain; background:#c6c9da; margin-left:6px}
 .theme-light .ico-left,.theme-light .ico-right{background:#515976}
-.icon-btn{background:transparent; border:none; color:#9aa3c4; cursor:pointer}
+.icon-btn{background:transparent; border:none; color:#9aa3c4; cursor:pointer; display:inline-flex; align-items:center; justify-content:center}
 .icon-btn.small{font-size:16px; padding:2px 6px}
 .icon-btn:hover{color:#cfd6f0}
-.icon-shuffle{width:34px; height:34px; padding:0; display:inline-block}
+.icon-shuffle{width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center}
 .icon-shuffle{mask:url('assets/icons/Shuffle.svg') no-repeat center/18px; -webkit-mask:url('assets/icons/Shuffle.svg') no-repeat center/18px; background:#9aa3c4; border:1px solid var(--border); border-radius:10px}
 .theme-light .icon-shuffle{background:#515976}
+#flagBtn{width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:10px}
 .flag-icon{display:inline-block; width:18px; height:18px; mask:url('assets/icons/Flag.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/Flag.svg') no-repeat center/contain; background:#c6c9da}
 .theme-light .flag-icon{background:#515976}
 
