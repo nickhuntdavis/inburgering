@@ -247,14 +247,16 @@
 
   // Build working deck based on filters
   function getFilteredCards(){
-    // Only include items from selected sets; empty = none
-    const keepKnm = state.categorySet || new Set();
-    const keepV = state.vocabSet || new Set();
+    // Only include items from selected sets; if a selector has no options (edge), treat as all
+    const allKnm = uniqueCategories();
+    const allV = vocabDifficulties();
+    const keepKnm = (state.categorySet && state.categorySet.size>0) ? state.categorySet : new Set(allKnm);
+    const keepV = (state.vocabSet && state.vocabSet.size>0) ? state.vocabSet : new Set(allV);
     let cards = ALL_CARDS.filter(c=>{
       if(isVocabCategory(c.category)){
-        return keepV.size>0 && keepV.has(c.category);
+        return keepV.has(c.category);
       } else {
-        return keepKnm.size>0 && keepKnm.has(c.category);
+        return keepKnm.has(c.category);
       }
     });
     // Globally remove skipped
@@ -1182,12 +1184,20 @@
     });
   }
   if(categoryDropdown){
-    categoryDropdown.addEventListener('change', ()=>{
-      const checks = Array.from(categoryDropdown.querySelectorAll('input[type="checkbox"]'));
-      const selected = checks.filter(c=>c.checked && c.value!=='__ALL_KNM__').map(c=>c.value);
-      // If everything is checked, treat as All (empty set)
+    categoryDropdown.addEventListener('change', (e)=>{
       const allCats = uniqueCategories();
-      state.categorySet = (selected.length===allCats.length) ? new Set() : new Set(selected);
+      const checks = Array.from(categoryDropdown.querySelectorAll('input[type="checkbox"]'));
+      const allToggle = checks.find(c=>c.value==='__ALL_KNM__');
+      const items = checks.filter(c=>c.value!=='__ALL_KNM__');
+      if(e && e.target === allToggle){
+        // Toggle all items according to the All checkbox
+        items.forEach(c=> c.checked = allToggle.checked);
+      }
+      const selected = items.filter(c=>c.checked).map(c=>c.value);
+      // Keep explicit set of selected categories
+      state.categorySet = new Set(selected);
+      // Reflect All checkbox state
+      if(allToggle){ allToggle.checked = selected.length === allCats.length && allCats.length>0; }
       localStorage.setItem(STORAGE_KEYS.lastCategory, JSON.stringify(Array.from(state.categorySet)));
       updateCategoryToggleText();
       refreshDeck();
@@ -1196,12 +1206,17 @@
   }
 
   if(vocabDropdown){
-    vocabDropdown.addEventListener('change', ()=>{
-      const checks = Array.from(vocabDropdown.querySelectorAll('input[type="checkbox"]'));
-      const selected = checks.filter(c=>c.checked && c.value!=='__ALL_VOCAB__').map(c=>c.value);
-      // If everything is checked, treat as All (empty set) like KNM
+    vocabDropdown.addEventListener('change', (e)=>{
       const diffs = vocabDifficulties();
-      state.vocabSet = (selected.length===diffs.length) ? new Set() : new Set(selected);
+      const checks = Array.from(vocabDropdown.querySelectorAll('input[type="checkbox"]'));
+      const allToggle = checks.find(c=>c.value==='__ALL_VOCAB__');
+      const items = checks.filter(c=>c.value!=='__ALL_VOCAB__');
+      if(e && e.target === allToggle){
+        items.forEach(c=> c.checked = allToggle.checked);
+      }
+      const selected = items.filter(c=>c.checked).map(c=>c.value);
+      state.vocabSet = new Set(selected);
+      if(allToggle){ allToggle.checked = selected.length === diffs.length && diffs.length>0; }
       updateVocabToggleText();
       refreshDeck();
       computeProgress();
