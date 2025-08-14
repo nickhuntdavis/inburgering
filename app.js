@@ -303,8 +303,8 @@
     // Compute KNM and Vocab scopes separately
     const knmAll = ALL_CARDS.filter(c=> !isVocabCategory(c.category));
     const vocabAll = ALL_CARDS.filter(c=> isVocabCategory(c.category));
-    const knmSelected = (state.categorySet && state.categorySet.size>0) ? knmAll.filter(c=> state.categorySet.has(c.category)) : knmAll;
-    const vocabSelected = (state.vocabSet && state.vocabSet.size>0) ? vocabAll.filter(c=> state.vocabSet.has(c.category)) : vocabAll;
+    const knmSelected = (state.categorySet && state.categorySet.size>0) ? knmAll.filter(c=> state.categorySet.has(c.category)) : [];
+    const vocabSelected = (state.vocabSet && state.vocabSet.size>0) ? vocabAll.filter(c=> state.vocabSet.has(c.category)) : [];
 
     const knmKnown = knmSelected.filter(c=>state.knownSet.has(c.id)).length;
     const vocabKnown = vocabSelected.filter(c=>state.knownSet.has(c.id)).length;
@@ -318,8 +318,12 @@
 
     if(scopeStats){
       const lines = [];
-      if(knmSelected.length){ lines.push(`KNM - ${Math.round(knmPct*100)}% - You know ${knmKnown} of ${knmSelected.length}`); }
-      if(vocabSelected.length){ lines.push(`Vocab - ${Math.round(vocabPct*100)}% - You know ${vocabKnown} of ${vocabSelected.length}`); }
+      if(state.categorySet && state.categorySet.size>0 && knmSelected.length){
+        lines.push(`KNM - ${Math.round(knmPct*100)}% - You know ${knmKnown} of ${knmSelected.length}`);
+      }
+      if(state.vocabSet && state.vocabSet.size>0 && vocabSelected.length){
+        lines.push(`Vocab - ${Math.round(vocabPct*100)}% - You know ${vocabKnown} of ${vocabSelected.length}`);
+      }
       scopeStats.textContent = lines.join('\n');
     }
   }
