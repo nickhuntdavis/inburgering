@@ -152,14 +152,29 @@
   };
 
   // Build categories
-  const VOCAB_SET = new Set(['Basic vocabulary','Basic Vocabulary','basic vocabulary','Medium Vocabulary','Difficult Vocabulary']);
+  // Vocab categories (exact labels as in Baserow)
+  const VOCAB_SET = new Set([
+    'Question words',
+    'Extra Vocabulary',
+    'Daily life',
+    'Core verbs',
+    'Everyday Connectors',
+    'Time & Frequency'
+  ]);
   function isVocabCategory(name){ return VOCAB_SET.has(String(name)); }
   function uniqueCategories(){
     const cats = new Set(ALL_CARDS.map(c=>c.category).filter(c=>!isVocabCategory(c)));
     return Array.from(cats);
   }
   function vocabDifficulties(){
-    const opts = ['Basic Vocabulary','Medium Vocabulary','Difficult Vocabulary'];
+    const opts = [
+      'Question words',
+      'Extra Vocabulary',
+      'Daily life',
+      'Core verbs',
+      'Everyday Connectors',
+      'Time & Frequency'
+    ];
     const present = new Set(ALL_CARDS.map(c=>c.category));
     return opts.filter(o=>present.has(o));
   }
