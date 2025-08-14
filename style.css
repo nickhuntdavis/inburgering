@@ -154,6 +154,9 @@ main{margin-top:0px}
 .icon-shuffle{width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center}
 .icon-shuffle{mask:url('assets/icons/Shuffle.svg') no-repeat center/18px; -webkit-mask:url('assets/icons/Shuffle.svg') no-repeat center/18px; background:#9aa3c4; border:1px solid var(--border); border-radius:10px}
 .theme-light .icon-shuffle{background:#515976}
+#ignoreBtn{width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:10px}
+.icon-ignore{mask:url('assets/icons/ignore.svg') no-repeat center/16px; -webkit-mask:url('assets/icons/ignore.svg') no-repeat center/16px; background:#9aa3c4}
+.theme-light .icon-ignore{background:#515976}
 #flagBtn{width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:10px}
 .flag-icon{display:inline-block; width:18px; height:18px; mask:url('assets/icons/Flag.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/Flag.svg') no-repeat center/contain; background:#c6c9da}
 .theme-light .flag-icon{background:#515976}

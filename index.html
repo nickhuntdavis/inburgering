@@ -37,10 +37,11 @@
             <div class="top-right">
               <div class="multi-select" id="cardsMulti">
                 <div class="ms-label">Cards</div>
-                <select id="knownFilterSelect" aria-label="Show">
+              <select id="knownFilterSelect" aria-label="Show">
                 <option value="unknown">Unknown cards</option>
                 <option value="known">Known cards</option>
                 <option value="hard">Hard cards</option>
+                <option value="ignored">Ignored cards</option>
                 <option value="all">All cards</option>
                 </select>
               </div>
@@ -75,6 +76,7 @@
             <div class="left">
               <button id="shuffleBtn2" class="icon-btn small icon-shuffle" title="Shuffle deck" aria-label="Shuffle deck"></button>
               <button id="hardBtn" class="btn hard" title="Hard (2)">Hard</button>
+              <button id="ignoreBtn" class="icon-btn small icon-ignore" title="Ignore to remove from your list - you can find it again later under 'Cards'" aria-label="Ignore"></button>
             </div>
             <div class="center">
               <button id="prevBtn" class="btn secondary" title="Back (←)"><span class="ico ico-left" aria-hidden="true"></span> Back</button>

@@ -42,6 +42,7 @@
   const flipBtn = document.getElementById('flipBtn');
   const speakBtn = document.getElementById('speakBtn');
   const skipBtnTop = document.getElementById('skipBtnTop');
+  const ignoreBtn = document.getElementById('ignoreBtn');
 
   const progressFill = document.getElementById('progressFill');
   const countRemaining = document.getElementById('countRemaining');
@@ -140,6 +141,7 @@
     knownSet: new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.known) || '[]')),
     hardSet: new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.hard) || '[]')),
     skipSet: new Set(JSON.parse(localStorage.getItem('knm_skip_cards_v1') || '[]')),
+    ignoreSet: new Set(JSON.parse(localStorage.getItem('knm_ignore_cards_v1') || '[]')),
     categorySet: savedCategorySet, // empty = All categories
     vocabSet: new Set(), // empty = hide vocab by default
     category: 'All', // legacy field, unused but kept for safety
@@ -273,6 +275,12 @@
         return keepKnm.size>0 && keepKnm.has(c.category);
       }
     });
+    // Remove ignored from normal flows unless viewing ignored
+    if(state.filter !== 'ignored'){
+      cards = cards.filter(c=> !state.ignoreSet.has(c.id));
+    } else {
+      cards = ALL_CARDS.filter(c=> state.ignoreSet.has(c.id));
+    }
     // Globally remove skipped
     cards = cards.filter(c=>!state.skipSet.has(c.id));
     if(state.filter === 'unknown') cards = cards.filter(c=>!state.knownSet.has(c.id));
@@ -305,8 +313,8 @@
 
   function computeProgress(){
     // Overall persistent progress, independent of current filter
-    const totalCards = ALL_CARDS.length;
-    const totalKnownOverall = ALL_CARDS.filter(c=>state.knownSet.has(c.id)).length;
+    const totalCards = ALL_CARDS.filter(c=> !state.ignoreSet.has(c.id)).length;
+    const totalKnownOverall = ALL_CARDS.filter(c=> state.knownSet.has(c.id) && !state.ignoreSet.has(c.id)).length;
     const totalRemaining = totalCards - totalKnownOverall;
     if(countKnown) countKnown.textContent = String(totalKnownOverall);
     if(countTotal) countTotal.textContent = String(totalCards);
@@ -342,6 +350,19 @@
       }
       scopeStats.textContent = lines.join('\n');
     }
+  }
+  function persistIgnore(){
+    const mode = localStorage.getItem('knm_onboard_seen_v1');
+    if(mode === 'nosave') return;
+    localStorage.setItem('knm_ignore_cards_v1', JSON.stringify(Array.from(state.ignoreSet)));
+    idbSet('ignore', Array.from(state.ignoreSet));
+  }
+
+  function markIgnored(card){
+    state.ignoreSet.add(card.id);
+    persistIgnore();
+    computeProgress();
+    refreshDeck();
   }
 
   function showToast(message){
@@ -1282,6 +1303,7 @@
   const shuffleBtn2 = document.getElementById('shuffleBtn2');
   if(shuffleBtn2){ shuffleBtn2.addEventListener('click', shuffle); }
   resetKnownBtn.addEventListener('click', resetKnown);
+  if(ignoreBtn){ ignoreBtn.addEventListener('click', ()=>{ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }}); }
 
   cardEl.addEventListener('click', flip);
   // flip button removed from UI; keep keyboard shortcut
@@ -1305,6 +1327,7 @@
     else if(e.key === 'ArrowRight'){ next(); }
     else if(e.key === 'ArrowLeft'){ prev(); }
     else if(key === 's'){ shuffle(); }
+    else if(key === 'i'){ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }}
     else if(key === 'u'){ const c = currentCard(); if(c && !c.bonus){ markUnknown(c); refreshDeck(); showCard(currentCard()); }}
     else if(key === 'x'){ const c = currentCard(); if(c && !c.bonus){ markSkipped(c); refreshDeck(); showCard(currentCard()); }}
     else if(key === 'l'){ const c = currentCard(); if(c) speak(c.term); }
