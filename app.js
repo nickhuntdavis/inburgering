@@ -52,6 +52,10 @@
   const avatarImg = document.getElementById('avatarImg');
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
+  const celebrateOverlay = document.getElementById('celebrateOverlay');
+  const celebrateMsg = document.getElementById('celebrateMsg');
+  let chimeAudio = null;
+  try{ chimeAudio = new Audio('assets/sounds/chime.mp3'); }catch{}
   const loadingOverlay = document.getElementById('loading');
   const modeToggle = document.getElementById('modeToggle');
   const onboardBtn = document.getElementById('onboardBtn');
@@ -345,9 +349,9 @@
 
     // Celebrate on milestone change
     if(typeof updateAvatar.lastIdx === 'number' && updateAvatar.lastIdx !== idx){
-      // Stronger confetti
+      // Stronger confetti + pulse + overlay + soft chime
+      try{ avatarImg.classList.add('avatar-pulse'); setTimeout(()=> avatarImg.classList.remove('avatar-pulse'), 1200); }catch{}
       confetti();
-      // Toast message
       const messages = [
         'Milestone reached! 🎉',
         'Lekker bezig! 🧡',
@@ -355,7 +359,13 @@
         'New level unlocked! ⭐',
         'Goed gedaan! 🚀'
       ];
-      showToast(messages[Math.floor(Math.random()*messages.length)]);
+      const msg = messages[Math.floor(Math.random()*messages.length)];
+      if(celebrateOverlay && celebrateMsg){
+        celebrateMsg.textContent = msg;
+        celebrateOverlay.classList.remove('hidden');
+        setTimeout(()=> celebrateOverlay.classList.add('hidden'), 1200);
+      }
+      if(chimeAudio){ try{ chimeAudio.currentTime = 0; chimeAudio.play().catch(()=>{}); }catch{} }
     }
     updateAvatar.lastIdx = idx;
   }
