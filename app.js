@@ -234,7 +234,7 @@
     const count = state.categorySet ? state.categorySet.size : 0;
     if(count === cats.length && cats.length>0) categoryDropdownToggle.textContent = 'All categories';
     else if(count > 0) categoryDropdownToggle.textContent = `${count} selected`;
-    else categoryDropdownToggle.textContent = 'All categories';
+    else categoryDropdownToggle.textContent = 'None selected';
   }
 
   function updateVocabToggleText(){
@@ -242,21 +242,19 @@
     const count = state.vocabSet ? state.vocabSet.size : 0;
     if(count === diffs.length && diffs.length>0) vocabDropdownToggle.textContent = 'All vocabulary';
     else if(count > 0) vocabDropdownToggle.textContent = `${count} selected`;
-    else vocabDropdownToggle.textContent = 'All vocabulary';
+    else vocabDropdownToggle.textContent = 'None selected';
   }
 
   // Build working deck based on filters
   function getFilteredCards(){
-    // Only include items from selected sets; if a selector has no options (edge), treat as all
-    const allKnm = uniqueCategories();
-    const allV = vocabDifficulties();
-    const keepKnm = (state.categorySet && state.categorySet.size>0) ? state.categorySet : new Set(allKnm);
-    const keepV = (state.vocabSet && state.vocabSet.size>0) ? state.vocabSet : new Set(allV);
+    // Only include items from selected sets; empty set excludes that scope
+    const keepKnm = state.categorySet || new Set();
+    const keepV = state.vocabSet || new Set();
     let cards = ALL_CARDS.filter(c=>{
       if(isVocabCategory(c.category)){
-        return keepV.has(c.category);
+        return keepV.size>0 && keepV.has(c.category);
       } else {
-        return keepKnm.has(c.category);
+        return keepKnm.size>0 && keepKnm.has(c.category);
       }
     });
     // Globally remove skipped
@@ -442,8 +440,14 @@
       return;
     }
     if(!card){
-      termEl.textContent = 'All done 🎉';
-      defEl.textContent = 'Change filters or reset Known to review again.';
+      // Empty state depends on filter
+      if(state.filter === 'known'){
+        termEl.textContent = 'You know nothing Jan Sneeuw';
+        defEl.textContent = '';
+      } else {
+        termEl.textContent = 'All done 🎉';
+        defEl.textContent = 'Change filters or reset Known to review again.';
+      }
       contextHintEl.textContent = '';
       categoryChip.textContent = '';
       subcategoryChip.textContent = '';
