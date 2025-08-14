@@ -224,17 +224,15 @@
   // Build working deck based on filters
   function getFilteredCards(){
     let cards = ALL_CARDS;
-    // Apply KNM categories (exclude vocab in this selector)
+    // KNM: empty set = All KNM categories
     if(state.categorySet && state.categorySet.size > 0){
-      cards = cards.filter(c=> !isVocabCategory(c.category) ? state.categorySet.has(c.category) : true);
+      const keepKnm = state.categorySet;
+      cards = cards.filter(c=> !isVocabCategory(c.category) ? keepKnm.has(c.category) : true);
     }
-    // Apply Vocab difficulties selector
+    // Vocab: empty set = All difficulties (so include all vocab by default)
     if(state.vocabSet && state.vocabSet.size > 0){
-      const keep = new Set([...state.vocabSet]);
-      cards = cards.filter(c=> !isVocabCategory(c.category) || keep.has(c.category));
-    } else {
-      // Default: hide vocab unless explicitly chosen
-      cards = cards.filter(c=> !isVocabCategory(c.category));
+      const keepV = state.vocabSet;
+      cards = cards.filter(c=> isVocabCategory(c.category) ? keepV.has(c.category) : true);
     }
     // Globally remove skipped
     cards = cards.filter(c=>!state.skipSet.has(c.id));
@@ -283,7 +281,7 @@
     const knmAll = ALL_CARDS.filter(c=> !isVocabCategory(c.category));
     const vocabAll = ALL_CARDS.filter(c=> isVocabCategory(c.category));
     const knmSelected = (state.categorySet && state.categorySet.size>0) ? knmAll.filter(c=> state.categorySet.has(c.category)) : knmAll;
-    const vocabSelected = (state.vocabSet && state.vocabSet.size>0) ? vocabAll.filter(c=> state.vocabSet.has(c.category)) : [];
+    const vocabSelected = (state.vocabSet && state.vocabSet.size>0) ? vocabAll.filter(c=> state.vocabSet.has(c.category)) : vocabAll;
 
     const knmKnown = knmSelected.filter(c=>state.knownSet.has(c.id)).length;
     const vocabKnown = vocabSelected.filter(c=>state.knownSet.has(c.id)).length;
