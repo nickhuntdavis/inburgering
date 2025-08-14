@@ -15,8 +15,14 @@
       <header class="topbar">
           <div class="controls-row top-controls">
             <div class="multi-select" id="categoryMulti">
+              <div class="ms-label">KNM</div>
               <button id="categoryDropdownToggle" class="secondary" type="button" aria-haspopup="listbox" aria-expanded="false">All categories</button>
               <div id="categoryDropdown" class="dropdown-panel" role="listbox" aria-multiselectable="true"></div>
+            </div>
+            <div class="multi-select" id="vocabMulti">
+              <div class="ms-label">Vocabulary</div>
+              <button id="vocabDropdownToggle" class="secondary" type="button" aria-haspopup="listbox" aria-expanded="false">Select difficulties</button>
+              <div id="vocabDropdown" class="dropdown-panel" role="listbox" aria-multiselectable="true"></div>
             </div>
 
             <div class="top-right">
@@ -76,16 +82,7 @@
           <div class="progress-bar">
             <div id="progressFill" class="fill"></div>
           </div>
-          <div class="stats" id="categoryStats">
-            <span id="countRemainingCat">0</span> left •
-            Known: <span id="countKnownCat">0</span> •
-            Total: <span id="countTotalCat">0</span>
-          </div>
-          <div class="stats">
-            <span id="countRemaining">0</span> left •
-            Known: <span id="countKnown">0</span> •
-            Total: <span id="countTotal">0</span>
-          </div>
+          <div id="scopeStats" class="stats-lines"></div>
         </section>
 
         <section class="avatar">

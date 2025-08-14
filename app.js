@@ -18,6 +18,9 @@
   const categoryMulti = document.getElementById('categoryMulti');
   const categoryDropdown = document.getElementById('categoryDropdown');
   const categoryDropdownToggle = document.getElementById('categoryDropdownToggle');
+  const vocabMulti = document.getElementById('vocabMulti');
+  const vocabDropdown = document.getElementById('vocabDropdown');
+  const vocabDropdownToggle = document.getElementById('vocabDropdownToggle');
   const knownFilterSelect = document.getElementById('knownFilterSelect');
   const shuffleBtn = document.getElementById('shuffleBtn');
   const resetKnownBtn = document.getElementById('resetKnownBtn');
@@ -43,15 +46,11 @@
   const countRemaining = document.getElementById('countRemaining');
   const countKnown = document.getElementById('countKnown');
   const countTotal = document.getElementById('countTotal');
-  const categoryStatsEl = document.getElementById('categoryStats');
-  const countRemainingCat = document.getElementById('countRemainingCat');
-  const countKnownCat = document.getElementById('countKnownCat');
-  const countTotalCat = document.getElementById('countTotalCat');
+  const scopeStats = document.getElementById('scopeStats');
 
   const avatarImg = document.getElementById('avatarImg');
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
-  const loadingOverlay = document.getElementById('loading');
   const modeToggle = document.getElementById('modeToggle');
   const onboardBtn = document.getElementById('onboardBtn');
   const onboardModal = document.getElementById('onboardModal');
@@ -136,6 +135,7 @@
     hardSet: new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.hard) || '[]')),
     skipSet: new Set(JSON.parse(localStorage.getItem('knm_skip_cards_v1') || '[]')),
     categorySet: savedCategorySet, // empty = All categories
+    vocabSet: new Set(), // empty = hide vocab by default
     category: 'All', // legacy field, unused but kept for safety
     filter: localStorage.getItem(STORAGE_KEYS.lastFilter) || 'unknown',
     // bonus scheduling
@@ -146,9 +146,16 @@
   };
 
   // Build categories
+  const VOCAB_SET = new Set(['Basic vocabulary','Basic Vocabulary','basic vocabulary','Medium Vocabulary','Difficult Vocabulary']);
+  function isVocabCategory(name){ return VOCAB_SET.has(String(name)); }
   function uniqueCategories(){
-    const cats = new Set(ALL_CARDS.map(c=>c.category));
+    const cats = new Set(ALL_CARDS.map(c=>c.category).filter(c=>!isVocabCategory(c)));
     return Array.from(cats);
+  }
+  function vocabDifficulties(){
+    const opts = ['Basic Vocabulary','Medium Vocabulary','Difficult Vocabulary'];
+    const present = new Set(ALL_CARDS.map(c=>c.category));
+    return opts.filter(o=>present.has(o));
   }
 
   function populateCategorySelect(){
@@ -173,6 +180,34 @@
     updateCategoryToggleText();
   }
 
+  function populateVocabSelect(){
+    if(!vocabDropdown) return;
+    const diffs = vocabDifficulties();
+    vocabDropdown.innerHTML = '';
+    const selected = state.vocabSet || new Set();
+    const allRow = document.createElement('div');
+    allRow.className = 'option-row';
+    const allId = 'v_all';
+    const allCb = document.createElement('input');
+    allCb.type = 'checkbox'; allCb.id = allId; allCb.value = '__ALL__';
+    allCb.checked = selected.size===0;
+    const allLabel = document.createElement('label'); allLabel.htmlFor = allId; allLabel.textContent = 'All difficulties';
+    allRow.appendChild(allCb); allRow.appendChild(allLabel);
+    vocabDropdown.appendChild(allRow);
+    for(const d of diffs){
+      const row = document.createElement('div');
+      row.className = 'option-row';
+      const id = 'v_'+d.replace(/[^a-z0-9]+/gi,'_');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.id = id; cb.value = d;
+      cb.checked = selected.size===0 ? false : selected.has(d);
+      const label = document.createElement('label'); label.htmlFor = id; label.textContent = d;
+      row.appendChild(cb); row.appendChild(label);
+      vocabDropdown.appendChild(row);
+    }
+    updateVocabToggleText();
+  }
+
   function updateCategoryToggleText(){
     const cats = uniqueCategories();
     if(state.categorySet && state.categorySet.size>0){
@@ -183,15 +218,30 @@
     }
   }
 
+  function updateVocabToggleText(){
+    const diffs = vocabDifficulties();
+    if(state.vocabSet && state.vocabSet.size>0){
+      const count = state.vocabSet.size;
+      vocabDropdownToggle.textContent = `${count} selected`;
+    } else {
+      vocabDropdownToggle.textContent = 'All difficulties';
+    }
+  }
+
   // Build working deck based on filters
   function getFilteredCards(){
     let cards = ALL_CARDS;
-    const basicCategoryNames = new Set(['Basic vocabulary','Basic Vocabulary','basic vocabulary']);
-    if(!state.categorySet || state.categorySet.size === 0){
-      cards = cards.filter(c=> !basicCategoryNames.has(String(c.category)));
-    }
+    // Apply KNM categories (exclude vocab in this selector)
     if(state.categorySet && state.categorySet.size > 0){
-      cards = cards.filter(c=> state.categorySet.has(c.category));
+      cards = cards.filter(c=> !isVocabCategory(c.category) ? state.categorySet.has(c.category) : true);
+    }
+    // Apply Vocab difficulties selector
+    if(state.vocabSet && state.vocabSet.size > 0){
+      const keep = new Set([...state.vocabSet]);
+      cards = cards.filter(c=> !isVocabCategory(c.category) || keep.has(c.category));
+    } else {
+      // Default: hide vocab unless explicitly chosen
+      cards = cards.filter(c=> !isVocabCategory(c.category));
     }
     // Globally remove skipped
     cards = cards.filter(c=>!state.skipSet.has(c.id));
@@ -228,35 +278,36 @@
     const totalCards = ALL_CARDS.length;
     const totalKnownOverall = ALL_CARDS.filter(c=>state.knownSet.has(c.id)).length;
     const totalRemaining = totalCards - totalKnownOverall;
-    countKnown.textContent = String(totalKnownOverall);
-    countTotal.textContent = String(totalCards);
-    countRemaining.textContent = String(totalRemaining);
+    if(countKnown) countKnown.textContent = String(totalKnownOverall);
+    if(countTotal) countTotal.textContent = String(totalCards);
+    if(countRemaining) countRemaining.textContent = String(totalRemaining);
     const overallPct = totalCards === 0 ? 0 : (totalKnownOverall / totalCards);
 
     // Keep avatar in sync with overall progress
     updateAvatar(overallPct);
 
-    // Per-category stats (for current selection)
-    let scope = ALL_CARDS;
-    if(state.categorySet && state.categorySet.size > 0){
-      scope = ALL_CARDS.filter(c=> state.categorySet.has(c.category));
-    }
-    const catTotal = scope.length;
-    const catKnown = scope.filter(c=>state.knownSet.has(c.id)).length;
-    const catRemaining = catTotal - catKnown;
-    if(countKnownCat && countTotalCat && countRemainingCat){
-      countKnownCat.textContent = String(catKnown);
-      countTotalCat.textContent = String(catTotal);
-      countRemainingCat.textContent = String(catRemaining);
-    }
-    if(categoryStatsEl){
-      categoryStatsEl.style.display = (state.categorySet && state.categorySet.size > 0) ? '' : 'none';
-    }
+    // Compute KNM and Vocab scopes separately
+    const knmAll = ALL_CARDS.filter(c=> !isVocabCategory(c.category));
+    const vocabAll = ALL_CARDS.filter(c=> isVocabCategory(c.category));
+    const knmSelected = (state.categorySet && state.categorySet.size>0) ? knmAll.filter(c=> state.categorySet.has(c.category)) : knmAll;
+    const vocabSelected = (state.vocabSet && state.vocabSet.size>0) ? vocabAll.filter(c=> state.vocabSet.has(c.category)) : [];
 
-    // Progress bar reflects selected category when filtered; otherwise overall
-    const catPct = catTotal === 0 ? 0 : (catKnown / catTotal);
-    const barPct = (state.categorySet && state.categorySet.size > 0) ? catPct : overallPct;
-    progressFill.style.width = (barPct * 100).toFixed(1) + '%';
+    const knmKnown = knmSelected.filter(c=>state.knownSet.has(c.id)).length;
+    const vocabKnown = vocabSelected.filter(c=>state.knownSet.has(c.id)).length;
+    const knmPct = knmSelected.length ? (knmKnown / knmSelected.length) : 0;
+    const vocabPct = vocabSelected.length ? (vocabKnown / vocabSelected.length) : 0;
+
+    const scopeCards = [...knmSelected, ...vocabSelected];
+    const scopeKnown = knmKnown + vocabKnown;
+    const barPct = scopeCards.length ? (scopeKnown / scopeCards.length) : overallPct;
+    if(progressFill) progressFill.style.width = (barPct * 100).toFixed(1) + '%';
+
+    if(scopeStats){
+      const lines = [];
+      if(knmSelected.length){ lines.push(`KNM - ${Math.round(knmPct*100)}% - You know ${knmKnown} of ${knmSelected.length}`); }
+      if(vocabSelected.length){ lines.push(`Vocab - ${Math.round(vocabPct*100)}% - You know ${vocabKnown} of ${vocabSelected.length}`); }
+      scopeStats.textContent = lines.join('\n');
+    }
   }
 
   function showToast(message){
@@ -1005,18 +1056,18 @@
       modeToggle.textContent = document.body.classList.contains('theme-light') ? '☀️' : '🌙';
     }
     populateCategorySelect();
+    populateVocabSelect();
     knownFilterSelect.value = state.filter;
     await syncSetsFromIdb();
     
     // Load descriptions first, then refresh deck
-    try{ if(loadingOverlay) loadingOverlay.classList.remove('hidden'); }catch{}
     await loadDescriptions();
     // After data loads, categories may change (coming from Baserow). Repopulate now.
     populateCategorySelect();
+    populateVocabSelect();
     
     // Now refresh deck with loaded cards
     refreshDeck();
-    try{ if(loadingOverlay) loadingOverlay.classList.add('hidden'); }catch{}
     
     // Show onboarding for first-time visitors
     try{
@@ -1095,13 +1146,37 @@
     });
   }
 
+  if(vocabDropdown){
+    vocabDropdown.addEventListener('change', ()=>{
+      const checks = Array.from(vocabDropdown.querySelectorAll('input[type="checkbox"]'));
+      const selected = checks.filter(c=>c.checked && c.value !== '__ALL__').map(c=>c.value);
+      // empty set = All difficulties ON; we store empty to indicate All selected
+      const diffs = vocabDifficulties();
+      state.vocabSet = (selected.length===0 || selected.length===diffs.length) ? new Set() : new Set(selected);
+      updateVocabToggleText();
+      refreshDeck();
+      computeProgress();
+    });
+  }
+
   // Close dropdown on outside click
   document.addEventListener('click', (e)=>{
-    if(!categoryMulti.contains(e.target)){
+    if(categoryMulti && !categoryMulti.contains(e.target)){
       categoryMulti.classList.remove('open');
       categoryDropdownToggle.setAttribute('aria-expanded','false');
     }
+    if(vocabMulti && !vocabMulti.contains(e.target)){
+      vocabMulti.classList.remove('open');
+      vocabDropdownToggle.setAttribute('aria-expanded','false');
+    }
   });
+
+  if(vocabDropdownToggle){
+    vocabDropdownToggle.addEventListener('click', ()=>{
+      const open = vocabMulti.classList.toggle('open');
+      vocabDropdownToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
 
   knownFilterSelect.addEventListener('change', ()=>{
     state.filter = knownFilterSelect.value;
