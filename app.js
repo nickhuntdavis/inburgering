@@ -167,13 +167,14 @@
     return Array.from(cats);
   }
   function vocabDifficulties(){
+    // Display order with "Extra Vocabulary" at the bottom
     const opts = [
       'Question words',
-      'Extra Vocabulary',
       'Daily life',
       'Core verbs',
       'Everyday Connectors',
-      'Time & Frequency'
+      'Time & Frequency',
+      'Extra Vocabulary'
     ];
     const present = new Set(ALL_CARDS.map(c=>c.category));
     return opts.filter(o=>present.has(o));
