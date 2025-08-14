@@ -230,7 +230,7 @@
     const count = state.categorySet ? state.categorySet.size : 0;
     if(count === cats.length && cats.length>0) categoryDropdownToggle.textContent = 'All categories';
     else if(count > 0) categoryDropdownToggle.textContent = `${count} selected`;
-    else categoryDropdownToggle.textContent = 'None selected';
+    else categoryDropdownToggle.textContent = 'All categories';
   }
 
   function updateVocabToggleText(){
@@ -238,22 +238,21 @@
     const count = state.vocabSet ? state.vocabSet.size : 0;
     if(count === diffs.length && diffs.length>0) vocabDropdownToggle.textContent = 'All vocabulary';
     else if(count > 0) vocabDropdownToggle.textContent = `${count} selected`;
-    else vocabDropdownToggle.textContent = 'None selected';
+    else vocabDropdownToggle.textContent = 'All vocabulary';
   }
 
   // Build working deck based on filters
   function getFilteredCards(){
-    let cards = ALL_CARDS;
-    // KNM: empty set = All KNM categories
-    if(state.categorySet && state.categorySet.size > 0){
-      const keepKnm = state.categorySet;
-      cards = cards.filter(c=> !isVocabCategory(c.category) ? keepKnm.has(c.category) : true);
-    }
-    // Vocab: empty set = All difficulties (so include all vocab by default)
-    if(state.vocabSet && state.vocabSet.size > 0){
-      const keepV = state.vocabSet;
-      cards = cards.filter(c=> isVocabCategory(c.category) ? keepV.has(c.category) : true);
-    }
+    // Only include items from selected sets; empty = none
+    const keepKnm = state.categorySet || new Set();
+    const keepV = state.vocabSet || new Set();
+    let cards = ALL_CARDS.filter(c=>{
+      if(isVocabCategory(c.category)){
+        return keepV.size>0 && keepV.has(c.category);
+      } else {
+        return keepKnm.size>0 && keepKnm.has(c.category);
+      }
+    });
     // Globally remove skipped
     cards = cards.filter(c=>!state.skipSet.has(c.id));
     if(state.filter === 'unknown') cards = cards.filter(c=>!state.knownSet.has(c.id));
@@ -1092,6 +1091,15 @@
     try{
       await loadDescriptions();
       // After data loads, categories may change (coming from Baserow). Repopulate now.
+      populateCategorySelect();
+      populateVocabSelect();
+      // Default to All for both selectors if nothing stored
+      if(!state.categorySet || state.categorySet.size === 0){
+        state.categorySet = new Set(uniqueCategories());
+      }
+      if(!state.vocabSet || state.vocabSet.size === 0){
+        state.vocabSet = new Set(vocabDifficulties());
+      }
       populateCategorySelect();
       populateVocabSelect();
       // Now refresh deck with loaded cards
