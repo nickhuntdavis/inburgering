@@ -157,6 +157,7 @@
   // Vocab categories (exact labels as in Baserow)
   const VOCAB_SET = new Set([
     'Question words',
+    'Pronouns',
     'Extra Vocabulary',
     'Daily life',
     'Core verbs',
@@ -172,6 +173,7 @@
     // Display order with "Extra Vocabulary" at the bottom
     const opts = [
       'Question words',
+      'Pronouns',
       'Daily life',
       'Core verbs',
       'Everyday Connectors',
