@@ -1060,6 +1060,8 @@
     idbSet('skip', Array.from(state.skipSet));
   }
 
+  function hideLoading(){ try{ if(loadingOverlay) loadingOverlay.classList.add('hidden'); }catch{} }
+
   async function init(){
     // restore theme
     const savedTheme = localStorage.getItem('knm_theme_v1');
@@ -1074,14 +1076,18 @@
     
     // Load descriptions first, then refresh deck
     try{ if(loadingOverlay) loadingOverlay.classList.remove('hidden'); }catch{}
-    await loadDescriptions();
-    // After data loads, categories may change (coming from Baserow). Repopulate now.
-    populateCategorySelect();
-    populateVocabSelect();
-    
-    // Now refresh deck with loaded cards
-    refreshDeck();
-    try{ if(loadingOverlay) loadingOverlay.classList.add('hidden'); }catch{}
+    // Safety: ensure overlay never sticks more than 12s
+    setTimeout(hideLoading, 12000);
+    try{
+      await loadDescriptions();
+      // After data loads, categories may change (coming from Baserow). Repopulate now.
+      populateCategorySelect();
+      populateVocabSelect();
+      // Now refresh deck with loaded cards
+      refreshDeck();
+    } finally {
+      hideLoading();
+    }
     
     // Show onboarding for first-time visitors
     try{
