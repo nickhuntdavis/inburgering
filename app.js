@@ -444,9 +444,14 @@
       return;
     }
     if(!card){
-      // Empty state depends on filter
+      // Empty state depends on filter and current KNM/Vocab selections
+      const noKnmSelected = !state.categorySet || state.categorySet.size === 0;
+      const noVocabSelected = !state.vocabSet || state.vocabSet.size === 0;
       if(state.filter === 'known'){
         termEl.textContent = 'You know nothing Jan Sneeuw';
+        defEl.textContent = '';
+      } else if(noKnmSelected && noVocabSelected && state.filter === 'unknown'){
+        termEl.textContent = 'Add some KNM or Vocabulary categories above';
         defEl.textContent = '';
       } else {
         termEl.textContent = 'All done 🎉';
