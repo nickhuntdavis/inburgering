@@ -29,6 +29,7 @@
   const cardInner = document.getElementById('cardInner');
   const termEl = document.getElementById('term');
   const defEl = document.getElementById('definition');
+  const frontEchoEl = document.getElementById('frontEcho');
   const contextHintEl = document.getElementById('contextHint');
   const categoryChip = document.getElementById('categoryChip');
   const subcategoryChip = document.getElementById('subcategoryChip');
@@ -186,22 +187,13 @@
     const diffs = vocabDifficulties();
     vocabDropdown.innerHTML = '';
     const selected = state.vocabSet || new Set();
-    const allRow = document.createElement('div');
-    allRow.className = 'option-row';
-    const allId = 'v_all';
-    const allCb = document.createElement('input');
-    allCb.type = 'checkbox'; allCb.id = allId; allCb.value = '__ALL__';
-    allCb.checked = selected.size===0;
-    const allLabel = document.createElement('label'); allLabel.htmlFor = allId; allLabel.textContent = 'All difficulties';
-    allRow.appendChild(allCb); allRow.appendChild(allLabel);
-    vocabDropdown.appendChild(allRow);
     for(const d of diffs){
       const row = document.createElement('div');
       row.className = 'option-row';
       const id = 'v_'+d.replace(/[^a-z0-9]+/gi,'_');
       const cb = document.createElement('input');
       cb.type = 'checkbox'; cb.id = id; cb.value = d;
-      cb.checked = selected.size===0 ? false : selected.has(d);
+      cb.checked = selected.size===0 ? true : selected.has(d);
       const label = document.createElement('label'); label.htmlFor = id; label.textContent = d;
       row.appendChild(cb); row.appendChild(label);
       vocabDropdown.appendChild(row);
@@ -431,6 +423,7 @@
     }
     termEl.textContent = card.term;
     defEl.textContent = card.definition;
+    if(frontEchoEl){ frontEchoEl.textContent = card.term || ''; }
     const rich = getRichDescription(card);
     contextHintEl.textContent = rich || buildContextHint(card);
     categoryChip.textContent = card.category;
@@ -1169,10 +1162,10 @@
   if(vocabDropdown){
     vocabDropdown.addEventListener('change', ()=>{
       const checks = Array.from(vocabDropdown.querySelectorAll('input[type="checkbox"]'));
-      const selected = checks.filter(c=>c.checked && c.value !== '__ALL__').map(c=>c.value);
-      // empty set = All difficulties ON; we store empty to indicate All selected
+      const selected = checks.filter(c=>c.checked).map(c=>c.value);
+      // If everything is checked, treat as All (empty set) like KNM
       const diffs = vocabDifficulties();
-      state.vocabSet = (selected.length===0 || selected.length===diffs.length) ? new Set() : new Set(selected);
+      state.vocabSet = (selected.length===diffs.length) ? new Set() : new Set(selected);
       updateVocabToggleText();
       refreshDeck();
       computeProgress();
