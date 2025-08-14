@@ -51,6 +51,7 @@
   const avatarImg = document.getElementById('avatarImg');
   const avatarCaption = document.getElementById('avatarCaption');
   const milestoneToast = document.getElementById('milestoneToast');
+  const loadingOverlay = document.getElementById('loading');
   const modeToggle = document.getElementById('modeToggle');
   const onboardBtn = document.getElementById('onboardBtn');
   const onboardModal = document.getElementById('onboardModal');
@@ -548,6 +549,17 @@
   }
 
   async function loadDescriptions(){
+    // Small helper to avoid long hangs per endpoint
+    async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 8000){
+      const ctrl = new AbortController();
+      const id = setTimeout(()=> ctrl.abort(), timeoutMs);
+      try{
+        const res = await fetch(url, { ...options, signal: ctrl.signal });
+        return res;
+      }finally{
+        clearTimeout(id);
+      }
+    }
     // Helper to fetch rows from a Baserow Public Grid View using pagination
     async function fetchBaserowPublicRows(viewSlug){
       // Prefer the API host to avoid CORS issues and try both view endpoints
@@ -587,7 +599,7 @@
     try{
       // 1) Try deployed Netlify function (production)
       try{
-        const hosted = await fetch('/.netlify/functions/cards', { cache: 'no-cache' });
+        const hosted = await fetchJsonWithTimeout('/.netlify/functions/cards', { cache: 'no-cache' }, 9000);
         if(hosted.ok){
           const json = await hosted.json();
           const rows = Array.isArray(json.results) ? json.results : (Array.isArray(json) ? json : []);
@@ -603,7 +615,7 @@
 
       // 2) Try local proxy with private token (development): http://localhost:8788/cards
       try{
-        const proxyRes = await fetch('http://localhost:8788/cards', { cache: 'no-cache' });
+        const proxyRes = await fetchJsonWithTimeout('http://localhost:8788/cards', { cache: 'no-cache' }, 3000);
         if(proxyRes.ok){
           const json = await proxyRes.json();
           const rows = Array.isArray(json.results) ? json.results : (Array.isArray(json) ? json : []);
@@ -1061,6 +1073,7 @@
     await syncSetsFromIdb();
     
     // Load descriptions first, then refresh deck
+    try{ if(loadingOverlay) loadingOverlay.classList.remove('hidden'); }catch{}
     await loadDescriptions();
     // After data loads, categories may change (coming from Baserow). Repopulate now.
     populateCategorySelect();
@@ -1068,6 +1081,7 @@
     
     // Now refresh deck with loaded cards
     refreshDeck();
+    try{ if(loadingOverlay) loadingOverlay.classList.add('hidden'); }catch{}
     
     // Show onboarding for first-time visitors
     try{
