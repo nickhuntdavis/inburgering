@@ -118,7 +118,7 @@ main{margin-top:0px}
 .front .meta{margin-top:24px; display:flex; gap:12px; color:var(--muted)}
 .chip{background:#202747; border:1px solid var(--border); border-radius:999px; padding:4px 10px}
 .theme-light .chip{background:#eef2ff}
-.chip.subtle{opacity:.8}
+#subcategoryChip{display:none}
 
 .back{transform: rotateY(180deg)}
 .definition{font-size:28px; line-height:1.3; color:inherit; text-align:center; max-width: 90%}

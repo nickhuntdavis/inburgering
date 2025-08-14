@@ -164,6 +164,18 @@
     const cats = uniqueCategories();
     categoryDropdown.innerHTML = '';
     const selected = state.categorySet || new Set();
+    // All categories option at top
+    {
+      const row = document.createElement('div');
+      row.className = 'option-row';
+      const id = 'cat_all';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.id = id; cb.value = '__ALL_KNM__';
+      cb.checked = selected.size === cats.length && cats.length > 0;
+      const label = document.createElement('label'); label.htmlFor = id; label.textContent = 'All categories';
+      row.appendChild(cb); row.appendChild(label);
+      categoryDropdown.appendChild(row);
+    }
     for(const c of cats){
       const row = document.createElement('div');
       row.className = 'option-row';
@@ -172,7 +184,7 @@
       cb.type = 'checkbox';
       cb.id = id;
       cb.value = c;
-      cb.checked = selected.size===0 ? true : selected.has(c);
+      cb.checked = selected.size>0 && selected.has(c);
       const label = document.createElement('label');
       label.htmlFor = id;
       label.textContent = c;
@@ -187,13 +199,25 @@
     const diffs = vocabDifficulties();
     vocabDropdown.innerHTML = '';
     const selected = state.vocabSet || new Set();
+    // All vocabulary option at top
+    {
+      const row = document.createElement('div');
+      row.className = 'option-row';
+      const id = 'v_all';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.id = id; cb.value = '__ALL_VOCAB__';
+      cb.checked = selected.size === diffs.length && diffs.length > 0;
+      const label = document.createElement('label'); label.htmlFor = id; label.textContent = 'All vocabulary';
+      row.appendChild(cb); row.appendChild(label);
+      vocabDropdown.appendChild(row);
+    }
     for(const d of diffs){
       const row = document.createElement('div');
       row.className = 'option-row';
       const id = 'v_'+d.replace(/[^a-z0-9]+/gi,'_');
       const cb = document.createElement('input');
       cb.type = 'checkbox'; cb.id = id; cb.value = d;
-      cb.checked = selected.size===0 ? true : selected.has(d);
+      cb.checked = selected.size>0 && selected.has(d);
       const label = document.createElement('label'); label.htmlFor = id; label.textContent = d;
       row.appendChild(cb); row.appendChild(label);
       vocabDropdown.appendChild(row);
@@ -203,22 +227,18 @@
 
   function updateCategoryToggleText(){
     const cats = uniqueCategories();
-    if(state.categorySet && state.categorySet.size>0){
-      const count = state.categorySet.size;
-      categoryDropdownToggle.textContent = `${count} selected`;
-    } else {
-      categoryDropdownToggle.textContent = 'All categories';
-    }
+    const count = state.categorySet ? state.categorySet.size : 0;
+    if(count === cats.length && cats.length>0) categoryDropdownToggle.textContent = 'All categories';
+    else if(count > 0) categoryDropdownToggle.textContent = `${count} selected`;
+    else categoryDropdownToggle.textContent = 'None selected';
   }
 
   function updateVocabToggleText(){
     const diffs = vocabDifficulties();
-    if(state.vocabSet && state.vocabSet.size>0){
-      const count = state.vocabSet.size;
-      vocabDropdownToggle.textContent = `${count} selected`;
-    } else {
-      vocabDropdownToggle.textContent = 'All difficulties';
-    }
+    const count = state.vocabSet ? state.vocabSet.size : 0;
+    if(count === diffs.length && diffs.length>0) vocabDropdownToggle.textContent = 'All vocabulary';
+    else if(count > 0) vocabDropdownToggle.textContent = `${count} selected`;
+    else vocabDropdownToggle.textContent = 'None selected';
   }
 
   // Build working deck based on filters
@@ -425,7 +445,7 @@
     const rich = getRichDescription(card);
     contextHintEl.textContent = rich || buildContextHint(card);
     categoryChip.textContent = card.category;
-    subcategoryChip.textContent = card.subcategory;
+    if(subcategoryChip) subcategoryChip.textContent = '';
   }
 
   function normTerm(s){
@@ -1146,8 +1166,8 @@
   if(categoryDropdown){
     categoryDropdown.addEventListener('change', ()=>{
       const checks = Array.from(categoryDropdown.querySelectorAll('input[type="checkbox"]'));
-      const selected = checks.filter(c=>c.checked).map(c=>c.value);
-      // If everything is checked, treat as All (empty set) for simplicity
+      const selected = checks.filter(c=>c.checked && c.value!=='__ALL_KNM__').map(c=>c.value);
+      // If everything is checked, treat as All (empty set)
       const allCats = uniqueCategories();
       state.categorySet = (selected.length===allCats.length) ? new Set() : new Set(selected);
       localStorage.setItem(STORAGE_KEYS.lastCategory, JSON.stringify(Array.from(state.categorySet)));
@@ -1160,7 +1180,7 @@
   if(vocabDropdown){
     vocabDropdown.addEventListener('change', ()=>{
       const checks = Array.from(vocabDropdown.querySelectorAll('input[type="checkbox"]'));
-      const selected = checks.filter(c=>c.checked).map(c=>c.value);
+      const selected = checks.filter(c=>c.checked && c.value!=='__ALL_VOCAB__').map(c=>c.value);
       // If everything is checked, treat as All (empty set) like KNM
       const diffs = vocabDifficulties();
       state.vocabSet = (selected.length===diffs.length) ? new Set() : new Set(selected);
