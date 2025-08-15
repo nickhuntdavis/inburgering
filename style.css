@@ -142,6 +142,7 @@ main{margin-top:0px}
 .btn{border-radius:10px; padding:10px 14px; border:1px solid #2b355a}
 .btn.good{background:#13211a; border-color:#204f3b; color:#b5ffd9}
 .btn.hard{background:#2d220f; border-color:#5b431a; color:#ffe6aa}
+.btn.easy{background:#13211a; border-color:#204f3b; color:#b5ffd9}
 .btn.again{background:#2b1414; border-color:#5b1c1c; color:#ffd3d3}
 .btn.tertiary{background:#171b30; color:#c6c9da}
 .btn.tertiary.active{outline:1px solid var(--accent)}

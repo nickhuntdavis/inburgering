@@ -24,6 +24,11 @@
   const knownFilterSelect = document.getElementById('knownFilterSelect');
   const shuffleBtn = document.getElementById('shuffleBtn');
   const resetKnownBtn = document.getElementById('resetKnownBtn');
+  const resetModal = document.getElementById('resetModal');
+  const resetAllBtn = document.getElementById('resetAllBtn');
+  const resetSelectedBtn = document.getElementById('resetSelectedBtn');
+  const resetCancel = document.getElementById('resetCancel');
+  const resetClose = document.getElementById('resetClose');
 
   const cardEl = document.getElementById('card');
   const cardInner = document.getElementById('cardInner');
@@ -929,6 +934,16 @@
     if(unmarkBtn) unmarkBtn.style.display = showUnmark ? '' : 'none';
     // Show Reset Known only when viewing Known
     if(resetKnownBtn) resetKnownBtn.style.display = (state.filter === 'known') ? '' : 'none';
+    // Hard button label/style toggles to Easy when viewing Hard list
+    if(state.filter === 'hard'){
+      hardBtn.textContent = 'Easy';
+      hardBtn.classList.remove('hard');
+      hardBtn.classList.add('easy');
+    } else {
+      hardBtn.textContent = 'Hard';
+      hardBtn.classList.remove('easy');
+      hardBtn.classList.add('hard');
+    }
   }
 
   function next(){
@@ -1031,8 +1046,16 @@
     showCard(currentCard());
   }
 
-  function resetKnown(){
+  function resetKnownAll(){
     state.knownSet.clear();
+    persistKnown();
+    computeProgress();
+    showCard(currentCard());
+  }
+
+  function resetKnownSelected(){
+    const cards = getFilteredCards();
+    cards.forEach(c=> state.knownSet.delete(c.id));
     persistKnown();
     computeProgress();
     showCard(currentCard());
@@ -1308,7 +1331,11 @@
   if(shuffleBtn){ shuffleBtn.addEventListener('click', shuffle); }
   const shuffleBtn2 = document.getElementById('shuffleBtn2');
   if(shuffleBtn2){ shuffleBtn2.addEventListener('click', shuffle); }
-  resetKnownBtn.addEventListener('click', resetKnown);
+  resetKnownBtn.addEventListener('click', ()=>{ if(resetModal) resetModal.classList.remove('hidden'); });
+  if(resetCancel){ resetCancel.addEventListener('click', ()=> resetModal.classList.add('hidden')); }
+  if(resetClose){ resetClose.addEventListener('click', ()=> resetModal.classList.add('hidden')); }
+  if(resetAllBtn){ resetAllBtn.addEventListener('click', ()=>{ resetModal.classList.add('hidden'); resetKnownAll(); }); }
+  if(resetSelectedBtn){ resetSelectedBtn.addEventListener('click', ()=>{ resetModal.classList.add('hidden'); resetKnownSelected(); }); }
   if(ignoreBtn){ ignoreBtn.addEventListener('click', ()=>{ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }}); }
   if(reverseBtn){
     reverseBtn.addEventListener('click', ()=>{

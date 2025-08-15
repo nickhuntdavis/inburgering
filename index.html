@@ -212,6 +212,24 @@
       </div>
     </div>
 
+    <!-- Reset Known Modal -->
+    <div id="resetModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="resetTitle">Reset known cards</h2>
+          <button id="resetClose" class="icon-btn small" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">Choose what to reset:</div>
+        </div>
+        <div class="modal-footer">
+          <button id="resetCancel" class="btn tertiary">Cancel</button>
+          <button id="resetSelectedBtn" class="btn secondary" title="Only cards in current KNM/Vocabulary selection">Reset selected</button>
+          <button id="resetAllBtn" class="btn danger">Reset all</button>
+        </div>
+      </div>
+    </div>
+
     <script src="app.js"></script>
   </body>
   </html>
