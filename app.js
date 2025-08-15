@@ -43,6 +43,7 @@
   const speakBtn = document.getElementById('speakBtn');
   const skipBtnTop = document.getElementById('skipBtnTop');
   const ignoreBtn = document.getElementById('ignoreBtn');
+  const reverseBtn = document.getElementById('reverseBtn');
 
   const progressFill = document.getElementById('progressFill');
   const countRemaining = document.getElementById('countRemaining');
@@ -151,6 +152,7 @@
     stepsUntilBonus: randInt(18, 30),
     bonusActive: false,
     bonusCard: null,
+    reverse: localStorage.getItem('knm_reverse_v1') === '1',
   };
 
   // Build categories
@@ -502,8 +504,10 @@
       cardEl.classList.remove('flipped');
       return;
     }
-    termEl.textContent = card.term;
-    defEl.textContent = card.definition;
+    const frontText = state.reverse ? card.definition : card.term;
+    const backText = state.reverse ? card.term : card.definition;
+    termEl.textContent = frontText;
+    defEl.textContent = backText;
     if(frontEchoEl){ frontEchoEl.textContent = card.term || ''; }
     const rich = getRichDescription(card);
     contextHintEl.textContent = rich || buildContextHint(card);
@@ -1306,6 +1310,17 @@
   if(shuffleBtn2){ shuffleBtn2.addEventListener('click', shuffle); }
   resetKnownBtn.addEventListener('click', resetKnown);
   if(ignoreBtn){ ignoreBtn.addEventListener('click', ()=>{ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }}); }
+  if(reverseBtn){
+    reverseBtn.addEventListener('click', ()=>{
+      state.reverse = !state.reverse;
+      try{ localStorage.setItem('knm_reverse_v1', state.reverse ? '1' : '0'); }catch{}
+      reverseBtn.classList.toggle('active', state.reverse);
+      // Re-render current card in new order
+      showCard(currentCard());
+    });
+    // initialize active state
+    reverseBtn.classList.toggle('active', state.reverse);
+  }
 
   cardEl.addEventListener('click', flip);
   // flip button removed from UI; keep keyboard shortcut
@@ -1333,6 +1348,7 @@
     else if(key === 'u'){ const c = currentCard(); if(c && !c.bonus){ markUnknown(c); refreshDeck(); showCard(currentCard()); }}
     else if(key === 'x'){ const c = currentCard(); if(c && !c.bonus){ markSkipped(c); refreshDeck(); showCard(currentCard()); }}
     else if(key === 'l'){ const c = currentCard(); if(c) speak(c.term); }
+    else if(key === 'r'){ if(reverseBtn) reverseBtn.click(); }
   });
 
   // Kickoff

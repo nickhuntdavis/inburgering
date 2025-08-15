@@ -144,6 +144,7 @@ main{margin-top:0px}
 .btn.hard{background:#2d220f; border-color:#5b431a; color:#ffe6aa}
 .btn.again{background:#2b1414; border-color:#5b1c1c; color:#ffd3d3}
 .btn.tertiary{background:#171b30; color:#c6c9da}
+.btn.tertiary.active{outline:1px solid var(--accent)}
 .ico{display:inline-block; width:16px; height:16px; vertical-align:-2px}
 .ico-left{mask:url('assets/icons/ArrowLeft.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/ArrowLeft.svg') no-repeat center/contain; background:#c6c9da; margin-right:6px}
 .ico-right{mask:url('assets/icons/ArrowRight.svg') no-repeat center/contain; -webkit-mask:url('assets/icons/ArrowRight.svg') no-repeat center/contain; background:#c6c9da; margin-left:6px}
