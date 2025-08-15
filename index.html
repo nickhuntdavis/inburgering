@@ -46,7 +46,7 @@
                 </select>
               </div>
               <button id="resetKnownBtn" class="danger" title="Reset known">Reset Known</button>
-              <button id="reverseBtn" class="btn tertiary" title="Reverse cards (show definition first)">Reverse</button>
+              <button id="reverseBtn" class="btn tertiary" title="Switch the front and back - it's good to practice both ways!">Reverse</button>
             </div>
           </div>
       </header>
@@ -100,6 +100,16 @@
           </div>
           <div id="scopeStats" class="stats-lines"></div>
         </section>
+
+        <!-- Mobile action bar (icons) -->
+        <div class="mobile-toolbar mobile-only" aria-label="Quick actions">
+          <button id="mShuffle" class="icon-btn small icon-shuffle" title="Shuffle"></button>
+          <button id="mIgnore" class="icon-btn small icon-ignore" title="Ignore"></button>
+          <button id="mListen" class="icon-btn small" title="Listen">🔊</button>
+          <button id="mFlag" class="icon-btn small" title="Flag an issue"><span class="flag-icon" aria-hidden="true"></span></button>
+          <button id="mReset" class="icon-btn small" title="Reset known">Reset</button>
+          <button id="mReverse" class="icon-btn small" title="Switch the front and back - it's good to practice both ways!">↔</button>
+        </div>
 
         <section class="avatar">
           <img id="avatarImg" class="avatar-img" alt="Progress character" />

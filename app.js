@@ -1333,6 +1333,30 @@
   if(shuffleBtn2){ shuffleBtn2.addEventListener('click', shuffle); }
   resetKnownBtn.addEventListener('click', ()=>{ if(resetModal) resetModal.classList.remove('hidden'); });
   if(resetCancel){ resetCancel.addEventListener('click', ()=> resetModal.classList.add('hidden')); }
+  // Mobile toolbar bindings (mirror main actions)
+  const mShuffle = document.getElementById('mShuffle'); if(mShuffle) mShuffle.addEventListener('click', shuffle);
+  const mIgnore = document.getElementById('mIgnore'); if(mIgnore) mIgnore.addEventListener('click', ()=>{ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }});
+  const mListen = document.getElementById('mListen'); if(mListen) mListen.addEventListener('click', ()=>{ const c=currentCard(); if(c) speak(c.term); });
+  const mFlag = document.getElementById('mFlag'); if(mFlag) mFlag.addEventListener('click', openSuggestModal);
+  const mReset = document.getElementById('mReset'); if(mReset) mReset.addEventListener('click', ()=>{ if(resetModal) resetModal.classList.remove('hidden'); });
+  const mReverse = document.getElementById('mReverse'); if(mReverse) mReverse.addEventListener('click', ()=>{ if(reverseBtn) reverseBtn.click(); });
+
+  // Swipe gestures for Next/Back
+  (function bindSwipe(){
+    const el = document.getElementById('card'); if(!el) return;
+    let startX = 0, startY = 0, active = false;
+    el.addEventListener('touchstart', (e)=>{
+      if(!e.touches || e.touches.length!==1) return; active=true; startX=e.touches[0].clientX; startY=e.touches[0].clientY;
+    }, {passive:true});
+    el.addEventListener('touchend', (e)=>{
+      if(!active) return; active=false;
+      const t = e.changedTouches && e.changedTouches[0]; if(!t) return;
+      const dx = t.clientX - startX; const dy = t.clientY - startY;
+      if(Math.abs(dx) > 40 && Math.abs(dy) < 40){
+        if(dx < 0) next(); else prev();
+      }
+    }, {passive:true});
+  })();
   if(resetClose){ resetClose.addEventListener('click', ()=> resetModal.classList.add('hidden')); }
   if(resetAllBtn){ resetAllBtn.addEventListener('click', ()=>{ resetModal.classList.add('hidden'); resetKnownAll(); }); }
   if(resetSelectedBtn){ resetSelectedBtn.addEventListener('click', ()=>{ resetModal.classList.add('hidden'); resetKnownSelected(); }); }

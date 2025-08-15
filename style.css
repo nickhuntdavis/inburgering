@@ -194,7 +194,15 @@ footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
 @media (max-width:520px){
   .card{height: 300px}
   .front .term{font-size:24px}
+  .top-controls{width:100%; gap:12px}
+  .topbar{gap:12px}
+  .controls-row{gap:8px}
+  .action-row{grid-template-columns: 1fr auto 1fr}
+  .mobile-only{display:flex}
 }
+
+.mobile-only{display:none; position:fixed; left:0; right:0; bottom:8px; z-index:10000; justify-content:center; gap:8px}
+.mobile-toolbar button{background:var(--panel); color:var(--muted); border:1px solid var(--border); border-radius:10px; padding:6px 10px}
 
 .toast{
   position: fixed;
