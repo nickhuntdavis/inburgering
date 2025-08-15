@@ -201,8 +201,9 @@ footer{margin-top:24px; color:#99a1bf; text-align:center; font-size:12px}
   .mobile-only{display:flex}
 }
 
-.mobile-only{display:none; position:fixed; left:0; right:0; bottom:8px; z-index:10000; justify-content:center; gap:8px}
-.mobile-toolbar button{background:var(--panel); color:var(--muted); border:1px solid var(--border); border-radius:10px; padding:6px 10px}
+.mobile-only{display:none}
+.mobile-dock{position:fixed; left:0; right:0; bottom:8px; z-index:10000; display:flex; justify-content:center; gap:8px}
+.mobile-dock button{background:var(--panel); color:var(--muted); border:1px solid var(--border); border-radius:10px; padding:6px 10px}
 
 .toast{
   position: fixed;

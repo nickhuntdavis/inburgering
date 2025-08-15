@@ -1333,13 +1333,39 @@
   if(shuffleBtn2){ shuffleBtn2.addEventListener('click', shuffle); }
   resetKnownBtn.addEventListener('click', ()=>{ if(resetModal) resetModal.classList.remove('hidden'); });
   if(resetCancel){ resetCancel.addEventListener('click', ()=> resetModal.classList.add('hidden')); }
-  // Mobile toolbar bindings (mirror main actions)
-  const mShuffle = document.getElementById('mShuffle'); if(mShuffle) mShuffle.addEventListener('click', shuffle);
-  const mIgnore = document.getElementById('mIgnore'); if(mIgnore) mIgnore.addEventListener('click', ()=>{ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }});
-  const mListen = document.getElementById('mListen'); if(mListen) mListen.addEventListener('click', ()=>{ const c=currentCard(); if(c) speak(c.term); });
-  const mFlag = document.getElementById('mFlag'); if(mFlag) mFlag.addEventListener('click', openSuggestModal);
-  const mReset = document.getElementById('mReset'); if(mReset) mReset.addEventListener('click', ()=>{ if(resetModal) resetModal.classList.remove('hidden'); });
-  const mReverse = document.getElementById('mReverse'); if(mReverse) mReverse.addEventListener('click', ()=>{ if(reverseBtn) reverseBtn.click(); });
+  // Mobile dock: move selected controls to bottom on small screens
+  (function setupMobileDock(){
+    const dock = document.getElementById('mobileDock'); if(!dock) return;
+    const mq = window.matchMedia('(max-width: 520px)');
+    function apply(){
+      if(mq.matches){
+        const nodes = [];
+        const cloneBtn = (node)=>{ const b=node.cloneNode(true); b.id = 'm_'+node.id; return b; };
+        // Build once per apply
+        dock.innerHTML = '';
+        if(document.getElementById('shuffleBtn2')) dock.appendChild(cloneBtn(document.getElementById('shuffleBtn2')));
+        if(ignoreBtn) dock.appendChild(cloneBtn(ignoreBtn));
+        if(speakBtn) dock.appendChild(cloneBtn(speakBtn));
+        if(document.getElementById('flagBtn')) dock.appendChild(cloneBtn(document.getElementById('flagBtn')));
+        if(resetKnownBtn) dock.appendChild(cloneBtn(resetKnownBtn));
+        if(reverseBtn) dock.appendChild(cloneBtn(reverseBtn));
+        // Bind actions
+        const g=(id,fn)=>{ const el=document.getElementById(id); if(el) el.addEventListener('click', fn);};
+        g('m_shuffleBtn2', shuffle);
+        g('m_ignoreBtn', ()=>{ const c=currentCard(); if(c && !c.bonus){ markIgnored(c); }});
+        g('m_speakBtn', ()=>{ const c=currentCard(); if(c) speak(c.term); });
+        g('m_flagBtn', openSuggestModal);
+        g('m_resetKnownBtn', ()=>{ if(resetModal) resetModal.classList.remove('hidden'); });
+        g('m_reverseBtn', ()=>{ if(reverseBtn) reverseBtn.click(); });
+        dock.classList.add('mobile-only');
+      } else {
+        dock.innerHTML='';
+        dock.classList.remove('mobile-only');
+      }
+    }
+    apply();
+    mq.addEventListener('change', apply);
+  })();
 
   // Swipe gestures for Next/Back
   (function bindSwipe(){
